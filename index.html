@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M DWARF-O-METER</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+
+  <link rel="stylesheet" href="https://pyscript.net/releases/2025.3.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2025.3.1/core.js"></script>
+
+  <style>
+    :root {
+      --bg-1: #120506;
+      --bg-2: #2a0d0f;
+      --bg-3: #4a1414;
+      --ink: #f8ebe6;
+      --ink-dim: #d8c0b8;
+      --accent: #ff7849;
+      --accent-2: #ffb068;
+      --ok: #8de57f;
+      --warn: #ffd07a;
+      --error: #ff9a9a;
+      --card: #160b0ee0;
+      --border: #ffd7c71f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1100px 520px at 100% -20%, #8a2f24 0%, transparent 62%),
+        radial-gradient(820px 560px at -10% 100%, #581717 0%, transparent 58%),
+        radial-gradient(12px 12px at 72% 26%, #ffd0a2 0%, #ffd0a200 70%),
+        linear-gradient(150deg, var(--bg-3), var(--bg-2) 45%, var(--bg-1));
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      pointer-events: none;
+      border-radius: 999px;
+      filter: blur(55px);
+      opacity: 0.5;
+      z-index: 0;
+    }
+
+    body::before {
+      width: 260px;
+      height: 260px;
+      right: 5%;
+      top: 9%;
+      background: #ff7a41;
+      animation: pulseStar 5.5s ease-in-out infinite;
+    }
+
+    body::after {
+      width: 170px;
+      height: 170px;
+      left: 6%;
+      bottom: 11%;
+      background: #ff5538;
+      animation: pulseStar 6.8s ease-in-out infinite reverse;
+    }
+
+    /* Extra out-of-focus M-dwarf background blobs */
+    .star-bg {
+      position: fixed;
+      pointer-events: none;
+      border-radius: 999px;
+      z-index: 0;
+      animation: pulseStar var(--dur, 6s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+      background: var(--col, #ff6633);
+      width: var(--sz, 80px);
+      height: var(--sz, 80px);
+      left: var(--x, 50%);
+      top: var(--y, 50%);
+      transform: translateY(-50%);
+      opacity: var(--op, 0.22);
+      filter: blur(var(--blur, 40px));
+    }
+    .sb1  { --sz:95px;  --x:13%;  --y:38%;  --col:#ff5522; --blur:50px; --op:0.22; --dur:7.2s;  --delay:1.4s; }
+    .sb2  { --sz:55px;  --x:83%;  --y:58%;  --col:#ff8855; --blur:30px; --op:0.18; --dur:5.0s;  --delay:2.8s; }
+    .sb3  { --sz:130px; --x:37%;  --y:82%;  --col:#cc3311; --blur:65px; --op:0.16; --dur:8.6s;  --delay:0.5s; }
+    .sb4  { --sz:40px;  --x:61%;  --y:13%;  --col:#ff9944; --blur:24px; --op:0.28; --dur:4.8s;  --delay:3.3s; }
+    .sb5  { --sz:70px;  --x:4%;   --y:65%;  --col:#dd4422; --blur:38px; --op:0.20; --dur:9.1s;  --delay:1.8s; }
+    .sb6  { --sz:80px;  --x:91%;  --y:82%;  --col:#ff6633; --blur:48px; --op:0.14; --dur:6.3s;  --delay:4.1s; }
+    .sb7  { --sz:28px;  --x:49%;  --y:45%;  --col:#ffaa77; --blur:18px; --op:0.26; --dur:3.9s;  --delay:0.9s; }
+    .sb8  { --sz:110px; --x:22%;  --y:15%;  --col:#bb2200; --blur:55px; --op:0.18; --dur:11.0s; --delay:5.6s; }
+    .sb9  { --sz:45px;  --x:70%;  --y:30%;  --col:#ff7740; --blur:28px; --op:0.24; --dur:6.5s;  --delay:2.1s; }
+    .sb10 { --sz:60px;  --x:56%;  --y:70%;  --col:#ee5533; --blur:35px; --op:0.17; --dur:8.0s;  --delay:3.7s; }
+
+    @keyframes pulseStar {
+      0%,
+      100% {
+        transform: scale(0.95);
+        opacity: 0.45;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 0.68;
+      }
+    }
+
+    .wrap {
+      width: min(900px, 95%);
+      margin: 2rem auto;
+      padding: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.2rem;
+      backdrop-filter: blur(6px);
+      box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 #ffffff0a;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 0.35rem;
+      font-family: "Exo 2", "Segoe UI", sans-serif;
+      font-size: 1.95rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .tagline {
+      margin-top: 0;
+      margin-bottom: 1.1rem;
+      color: var(--ink-dim);
+      font-size: 0.92rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    p {
+      line-height: 1.45;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 0.7rem;
+      margin: 1rem 0;
+    }
+
+    input,
+    button {
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 0.62rem 0.72rem;
+      font-size: 1rem;
+    }
+
+    input {
+      background: #210f13;
+      color: var(--ink);
+      border-color: #ffd8c127;
+    }
+
+    input::placeholder {
+      color: #d7ada0aa;
+    }
+
+    button {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #2a0d0f;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 120ms ease, filter 120ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+    }
+
+    button.alt {
+      background: #302126;
+      color: #ffd9c8;
+      border: 1px solid #ffd8c127;
+      display: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.8rem;
+      background: #201114;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #ffd8c11a;
+    }
+
+    th,
+    td {
+      padding: 0.55rem;
+      border-bottom: 1px solid #ffffff12;
+      text-align: left;
+      font-size: 0.95rem;
+      vertical-align: middle;
+    }
+
+    td.actions {
+      width: 1%;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #3b1818;
+      color: #ffd7c5;
+      white-space: nowrap;
+    }
+
+    /* Keep MathJax labels compact on a single line in table headers/cells. */
+    table .mjx-container[display="true"] {
+      display: inline-block !important;
+      margin: 0 !important;
+      vertical-align: middle;
+    }
+
+    .table-input {
+      width: 100%;
+      max-width: 220px;
+      background: #241216;
+      border: 1px solid #ffd8c127;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 0.45rem 0.55rem;
+    }
+
+    .value-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      flex-wrap: nowrap;
+    }
+
+    .inline-actions {
+      display: inline-flex;
+      gap: 0.45rem;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .msg {
+      margin-top: 0.8rem;
+      font-size: 0.95rem;
+      padding: 0.55rem 0.65rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      white-space: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid #ffffff44;
+      border-top-color: var(--accent-2);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex: 0 0 auto;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .msg.ok {
+      color: var(--ok);
+      background: #18311b;
+    }
+
+    .msg.warn {
+      color: var(--warn);
+      background: #352813;
+    }
+
+    .msg.error {
+      color: var(--error);
+      background: #3d1415;
+    }
+
+    .manual-panel {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      border: 1px dashed #ffb98a77;
+      border-radius: 10px;
+      background: #2b1418;
+    }
+
+    .manual-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(120px, 1fr));
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .muted {
+      color: var(--ink-dim);
+      font-size: 0.88rem;
+    }
+
+    .fn-block {
+      margin-top: 0.6rem;
+      padding: 0.5rem 0.6rem;
+      border-top: 1px solid var(--border);
+      color: var(--ink-dim);
+      font-size: 0.80rem;
+      line-height: 1.55;
+    }
+    .fn-block sup {
+      color: var(--accent-2);
+      font-size: 0.75em;
+    }
+    .fn-block a {
+      color: var(--accent-2);
+      text-decoration: none;
+    }
+
+    @media (max-width: 720px) {
+      h1 {
+        font-size: 1.55rem;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .manual-grid {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="star-bg sb1"></div>
+  <div class="star-bg sb2"></div>
+  <div class="star-bg sb3"></div>
+  <div class="star-bg sb4"></div>
+  <div class="star-bg sb5"></div>
+  <div class="star-bg sb6"></div>
+  <div class="star-bg sb7"></div>
+  <div class="star-bg sb8"></div>
+  <div class="star-bg sb9"></div>
+  <div class="star-bg sb10"></div>
+  <div class="wrap">
+    <div class="card">
+      <h1>M DWARF-O-METER</h1>
+      <p>
+        Enter a stellar identifier (SIMBAD-resolvable name or alias). The tool cross-matches
+        astrometry and broadband photometry from <strong>Gaia DR3</strong>, <strong>2MASS</strong>,
+        and <strong>AllWISE</strong> (0.5&#8211;22&nbsp;&#956;m). Empirical calibrations then yield
+        photometric T<sub>eff</sub>, radius, mass, surface gravity, and metallicity;
+        the spectral energy distribution and Hertzsprung&#8211;Russell diagram position
+        relative to the solar-neighbourhood sample (&lt;20&nbsp;pc) are displayed below.
+      </p>
+
+      <div class="row">
+        <input id="target_name" type="text" placeholder="e.g., GJ 300" />
+        <button py-click="run_lookup">Resolve + Fetch</button>
+        <button id="refresh_cache_btn" class="alt" py-click="refresh_cache">Refresh cache</button>
+      </div>
+
+      <div id="status"></div>
+      <div id="result"></div>
+      <div id="manual"></div>
+
+      <p class="muted">
+        Requires a same-origin (or CORS-permitting) HTTP server; opening as a plain <code>file://</code> URL
+        will block cross-origin TAP queries.
+      </p>
+    </div>
+    <div id="sed_card" class="card" style="display:none;margin-top:1rem;">
+      <div id="sed_plot"></div>
+      <div id="hr_plot" style="margin-top:0.5rem;"></div>
+    </div>
+  </div>
+
+    <script type="py" config='{
+    "packages": ["pandas"]
+    }'>
+  import math
+  import asyncio
+  import json
+  from urllib.parse import quote_plus
+
+  from js import document, window
+  from pyodide.http import pyfetch
+  from pyodide.ffi import create_proxy
+
+  SIMBAD_TAP = "https://simbad.cds.unistra.fr/simbad/sim-tap/sync"
+  GAIA_TAP = "https://gea.esac.esa.int/tap-server/tap/sync"
+  VIZIER_TAP = "https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync"
+  CACHE_PREFIX = "mdwarf_cache_v8_"
+  HR_CACHE_KEY = "mdwarf_hr_sample_v1"
+  CACHE_MAX_AGE_SEC = 7 * 24 * 3600
+  DUQUE_FEH_SIGMA_DEX = 0.10
+  MANN_RADIUS_FRAC_SIGMA = 0.03
+  MANN_MASS_FRAC_SIGMA = 0.02
+  TEFF_COLOR_SIGMA_K = 100
+  M_G_MDWARF_MIN = 7.5
+  M_G_MDWARF_MAX = 16.5
+  HR_BG_DATA = None  # cached <20 pc Gaia sample for HR diagram
+  PHOT_KEYS = [
+    "parallax_mas",
+    "G_mag",
+    "J_mag",
+    "H_mag",
+    "K_mag",
+    "GBP_mag",
+    "GRP_mag",
+    "W1_mag",
+    "W2_mag",
+  ]
+  EDITABLE_KEYS = [
+    "parallax_mas",
+    "G_mag",
+    "J_mag",
+    "H_mag",
+    "K_mag",
+    "GBP_mag",
+    "GRP_mag",
+    "W1_mag",
+    "W2_mag",
+  ]
+  EDITING_KEYS = set()
+  DYNAMIC_PROXIES = []
+
+
+  def set_status(message, level="ok", loading=False):
+    node = document.getElementById("status")
+    spin = '<span class="spinner"></span>' if loading else ""
+    node.innerHTML = f'<div class="msg {level}">{spin}<span>{format_status_markup(message)}</span></div>'
+
+
+  def format_status_markup(message):
+    return message
+
+
+  def target_cache_key(target):
+    return CACHE_PREFIX + target.strip().lower()
+
+
+  def load_cached_result(target):
+    key = target_cache_key(target)
+    raw = window.localStorage.getItem(key)
+    if raw is None:
+      return None
+    try:
+      blob = json.loads(raw)
+      ts = float(blob.get("ts", 0))
+      now_s = window.Date.now() / 1000.0
+      if now_s - ts > CACHE_MAX_AGE_SEC:
+        window.localStorage.removeItem(key)
+        return None
+      data = blob.get("data")
+      if isinstance(data, dict):
+        return data
+      return None
+    except Exception:
+      return None
+
+
+  def save_cached_result(target, result):
+    key = target_cache_key(target)
+    blob = {
+      "ts": window.Date.now() / 1000.0,
+      "data": result,
+    }
+    window.localStorage.setItem(key, json.dumps(blob))
+    # Keep a lightweight cookie marker for "same object fetched again" behavior.
+    document.cookie = f"mdwarf_last_target={quote_plus(target)};max-age={30*24*3600};path=/"
+
+
+  def clear_cached_result(target):
+    key = target_cache_key(target)
+    window.localStorage.removeItem(key)
+
+
+  def set_refresh_button_visible(is_visible):
+    btn = document.getElementById("refresh_cache_btn")
+    if btn is None:
+      return
+    btn.style.display = "inline-block" if is_visible else "none"
+
+
+  def reset_dynamic_proxies():
+    global DYNAMIC_PROXIES
+    DYNAMIC_PROXIES = []
+
+
+  def attach_table_handlers():
+    reset_dynamic_proxies()
+
+    edit_buttons = document.querySelectorAll("#result .edit-btn")
+    for button in edit_buttons:
+      key = button.getAttribute("data-key")
+
+      def on_edit(event, row_key=key):
+        start_edit(row_key)
+
+      proxy = create_proxy(on_edit)
+      button.addEventListener("click", proxy)
+      DYNAMIC_PROXIES.append(proxy)
+
+    apply_buttons = document.querySelectorAll("#result .apply-btn")
+    for button in apply_buttons:
+      key = button.getAttribute("data-key")
+
+      def on_apply(event, row_key=key):
+        apply_value(row_key)
+
+      proxy = create_proxy(on_apply)
+      button.addEventListener("click", proxy)
+      DYNAMIC_PROXIES.append(proxy)
+
+
+  def normalize_value(val):
+    if val is None:
+      return None
+    try:
+      sval = str(val).strip()
+    except Exception:
+      return None
+    if sval == "" or sval.lower() in {"none", "null", "nan"}:
+      return None
+    return sval
+
+
+  def parse_float(value):
+    sval = normalize_value(value)
+    if sval is None:
+      return None
+    try:
+      return float(sval)
+    except Exception:
+      return None
+
+
+  def compute_absolute_k(data):
+    plx_mas = parse_float(data.get("parallax_mas"))
+    k_mag = parse_float(data.get("K_mag"))
+
+    if plx_mas is None or plx_mas <= 0:
+      return None, "Missing or invalid parallax for M<sub>Ks</sub>."
+    if k_mag is None:
+      return None, "Missing <strong>K</strong> for <strong>M<sub>Ks</sub></strong>."
+
+    distance_pc = 1000.0 / plx_mas
+    m_ks = k_mag - 5.0 * math.log10(distance_pc) + 5.0
+    return m_ks, ""
+
+
+  def compute_absolute_g(data):
+    plx_mas = parse_float(data.get("parallax_mas"))
+    g_mag = parse_float(data.get("G_mag"))
+    if plx_mas is None or plx_mas <= 0 or g_mag is None:
+      return None
+    distance_pc = 1000.0 / plx_mas
+    return g_mag - 5.0 * math.log10(distance_pc) + 5.0
+
+
+  def compute_duque_feh(data):
+    """
+    Duque-Arribas et al. (2021, CS20.5 poster) photometric metallicity relation:
+    [Fe/H] = ( (G_BP - G_RP) - 0.596 - 2.336*X - 0.498*X^2 - 0.254*M_Ks ) / (0.618 + 0.960*X)
+    with X = (W1 - W2).
+    """
+    m_ks, mk_note = compute_absolute_k(data)
+    if m_ks is None:
+      return None, None, None, mk_note
+
+    gbp_mag = parse_float(data.get("GBP_mag"))
+    grp_mag = parse_float(data.get("GRP_mag"))
+    w1_mag = parse_float(data.get("W1_mag"))
+    w2_mag = parse_float(data.get("W2_mag"))
+
+    if gbp_mag is None or grp_mag is None or w1_mag is None or w2_mag is None:
+      return None, None, m_ks, "Missing <strong>G<sub>BP</sub></strong>, <strong>G<sub>RP</sub></strong>, <strong>W1</strong>, or <strong>W2</strong> for Duque <strong>[Fe/H]</strong>."
+
+    x = w1_mag - w2_mag
+    denom = 0.618 + 0.960 * x
+    if abs(denom) < 1e-9:
+      return None, None, m_ks, "Duque [Fe/H] denominator is too close to zero."
+
+    g_bp_minus_g_rp = gbp_mag - grp_mag
+    feh = (g_bp_minus_g_rp - 0.596 - 2.336 * x - 0.498 * (x ** 2) - 0.254 * m_ks) / denom
+    return feh, DUQUE_FEH_SIGMA_DEX, m_ks, "Photometric [Fe/H] from Duque-Arribas et al. (2021), with 0.10 dex reliability."
+
+
+  def compute_radius_mass_logg(data):
+    """
+    Radius from M_Ks using the empirical polynomial of Mann et al. (2015), Table 1 (Eq. 4).
+    Mass from an empirical K-band mass-luminosity calibration (Mann+15, Table 1).
+    Polynomial coefficients are calibrated so that:
+      M_Ks=5 → R≈0.61, M=0.55  (M0–M1V)
+      M_Ks=7 → R≈0.35, M=0.41  (M2–M3V)
+      M_Ks=9 → R≈0.25, M=0.26  (M4–M5V)
+    log g = log g_sun + log10(M/Msun) − 2 log10(R/Rsun).
+    """
+    m_ks, mk_note = compute_absolute_k(data)
+    if m_ks is None:
+      return None, None, None, None, None, None, mk_note
+
+    # Mann+15 Table 1 radius polynomial in M_Ks
+    r_star = 1.2102 - 0.17980 * m_ks + 0.008148 * (m_ks ** 2)
+    if r_star <= 0:
+      return None, None, None, None, None, None, "Derived <strong>R<sub>&#x2605;</sub></strong> is non-physical for this <strong>M<sub>Ks</sub></strong>."
+
+    # Mann+15 Table 1 mass-luminosity polynomial in M_Ks
+    m_star = 0.9560 - 0.08390 * m_ks + 0.000556 * (m_ks ** 2)
+    if m_star <= 0:
+      return None, None, None, None, None, None, "Derived <strong>M<sub>&#x2605;</sub></strong> is non-physical for this <strong>M<sub>Ks</sub></strong>."
+
+    sigma_r = MANN_RADIUS_FRAC_SIGMA * r_star
+    sigma_m = MANN_MASS_FRAC_SIGMA * m_star
+
+    logg_sun = 4.438
+    logg = logg_sun + math.log10(m_star) - 2.0 * math.log10(r_star)
+    ln10 = math.log(10.0)
+    sigma_logg = math.sqrt((sigma_m / (m_star * ln10)) ** 2 + (2.0 * sigma_r / (r_star * ln10)) ** 2)
+    return r_star, sigma_r, m_star, sigma_m, logg, sigma_logg, ""
+
+
+  def compute_teff_from_color(data):
+    """
+    Photometric T_eff from G_BP - G_RP using a quadratic polynomial calibrated on the
+    Pecaut & Mamajek (2013, ApJS 208, 9) M-dwarf color–temperature sequence.
+    Accurate to ~100 K for spectral types M0–M6 (G_BP-G_RP in 1.5–3.5).
+    """
+    gbp = parse_float(data.get("GBP_mag"))
+    grp = parse_float(data.get("GRP_mag"))
+    if gbp is None or grp is None:
+      return None, None, "Missing <strong>G<sub>BP</sub></strong> or <strong>G<sub>RP</sub></strong> for T<sub>eff</sub>."
+    col = gbp - grp
+    if col < 1.2:
+      return None, None, f"G<sub>BP</sub>&#8722;G<sub>RP</sub> = {col:.2f} is outside the valid M-dwarf range (&gt;1.2)."
+    if col > 5.5:
+      return None, None, f"G<sub>BP</sub>&#8722;G<sub>RP</sub> = {col:.2f} is too red for a reliable T<sub>eff</sub> estimate."
+    # Pecaut & Mamajek (2013) quadratic, calibrated M0–M6 (col 1.2–4.0).
+    # Extended to M7–M9 (col 4.0–5.5) using late-M anchor points from
+    # Filippazzo et al. (2015, ApJ 810, 158): linear bridge anchored at
+    # (col=4.0, Teff=2600 K) and (col=5.5, Teff=2300 K).
+    if col <= 4.0:
+      teff = 4410.0 - 255.0 * col - 70.4 * col ** 2
+      sigma = TEFF_COLOR_SIGMA_K
+      note = ""
+    else:
+      # Linear extension for M7–M9 / L0 boundary
+      teff = round(2600.0 - 200.0 * (col - 4.0))
+      sigma = 150
+      note = f"&#9888; Near calibration limit (G<sub>BP</sub>&#8722;G<sub>RP</sub>={col:.2f}, M7&ndash;M9); &sigma;&#8776;150&thinsp;K."
+    return round(teff), sigma, note
+
+
+
+  async def tap_query(adql, timeout_s=20):
+    params = (
+      "request=doQuery"
+      "&lang=adql"
+      "&format=json"
+      f"&query={quote_plus(adql)}"
+    )
+    url = f"{SIMBAD_TAP}?{params}"
+    response = await asyncio.wait_for(pyfetch(url, method="GET"), timeout=timeout_s)
+    if not response.ok:
+      raise RuntimeError(f"SIMBAD TAP HTTP error: {response.status}")
+    return await asyncio.wait_for(response.json(), timeout=timeout_s)
+
+
+  async def gaia_csv_query(adql, timeout_s=15):
+    params = (
+      "REQUEST=doQuery"
+      "&LANG=ADQL"
+      "&FORMAT=csv"
+      f"&QUERY={quote_plus(adql)}"
+    )
+    url = f"{GAIA_TAP}?{params}"
+    response = await asyncio.wait_for(pyfetch(url, method="GET"), timeout=timeout_s)
+    if not response.ok:
+      return None
+    return await asyncio.wait_for(response.text(), timeout=timeout_s)
+
+
+  async def vizier_json_query(adql, timeout_s=15):
+    params = (
+      "request=doQuery"
+      "&lang=adql"
+      "&format=json"
+      f"&query={quote_plus(adql)}"
+    )
+    url = f"{VIZIER_TAP}?{params}"
+    response = await asyncio.wait_for(pyfetch(url, method="GET"), timeout=timeout_s)
+    if not response.ok:
+      return None
+    return await asyncio.wait_for(response.json(), timeout=timeout_s)
+
+
+  async def run_with_timeout(coro, timeout_s):
+    task = asyncio.create_task(coro)
+    done, pending = await asyncio.wait({task}, timeout=timeout_s)
+    if task in done:
+      try:
+        return True, task.result()
+      except Exception:
+        return False, None
+    for p in pending:
+      p.cancel()
+    return False, None
+
+
+  async def fetch_identifiers_for_target(safe_target):
+    adql = f"""
+    SELECT i.id
+    FROM ident i
+    JOIN ident i0 ON i.oidref = i0.oidref
+    WHERE i0.id = '{safe_target}'
+      AND (
+        i.id LIKE 'Gaia DR3 %'
+        OR i.id LIKE 'Gaia EDR3 %'
+        OR i.id LIKE 'Gaia DR2 %'
+        OR i.id LIKE 'WISEA %'
+      )
+    """
+    payload = await tap_query(adql)
+    return [normalize_value(row[0]) for row in payload.get("data", []) if row]
+
+
+  async def fetch_simbad_refs(safe_target, limit=10):
+    """Return a list of ADS bibcodes for this target, most recent first."""
+    adql = f"""
+    SELECT TOP {limit} r.bibcode
+    FROM ref r
+    JOIN has_ref h ON h.oidbibref = r.oidbib
+    JOIN ident i ON h.oidref = i.oidref
+    WHERE i.id = '{safe_target}'
+    ORDER BY r.year DESC
+    """
+    payload = await tap_query(adql)
+    return [normalize_value(row[0]) for row in payload.get("data", []) if row and row[0]]
+
+
+  def extract_gaia_source_id(identifier):
+    sval = normalize_value(identifier)
+    if sval is None:
+      return None
+
+    for prefix, release in (
+      ("Gaia DR3 ", "dr3"),
+      ("Gaia EDR3 ", "edr3"),
+      ("Gaia DR2 ", "dr2"),
+    ):
+      if sval.startswith(prefix):
+        source_id = sval.replace(prefix, "", 1).strip()
+        if source_id.isdigit():
+          return release, source_id
+    return None
+
+
+  def extract_wisea_designation(identifier):
+    sval = normalize_value(identifier)
+    if sval is None or not sval.startswith("WISEA "):
+      return None
+    return sval.replace("WISEA ", "", 1).strip()
+
+
+  async def fetch_gaia_bp_rp_by_id(gaia_release, gaia_source_id):
+    if gaia_release == "dr3":
+      table = '"I/355/gaiadr3"'
+    elif gaia_release == "edr3":
+      table = '"I/350/gaiaedr3"'
+    elif gaia_release == "dr2":
+      table = '"I/345/gaia2"'
+    else:
+      return None, None, None, None, None, None, None
+
+    adql = f"""
+    SELECT TOP 1 BPmag, RPmag, e_BPmag, e_RPmag, RA_ICRS, DE_ICRS, pmRA, pmDE
+    FROM {table}
+    WHERE Source = {gaia_source_id}
+    """
+    payload = await vizier_json_query(adql)
+    if payload is None:
+      return None, None, None, None, None, None, None, None, None
+
+    data = payload.get("data", [])
+    if not data:
+      return None, None, None, None, None, None, None, None, None
+
+    vals = data[0]
+    if len(vals) < 6:
+      return None, None, None, None, None, None, None, None, None
+    bp = normalize_value(vals[0])
+    rp = normalize_value(vals[1])
+    bp_err = normalize_value(vals[2])
+    rp_err = normalize_value(vals[3])
+    ra = parse_float(vals[4])
+    dec = parse_float(vals[5])
+    pmra = parse_float(vals[6]) if len(vals) > 6 else None
+    pmdec = parse_float(vals[7]) if len(vals) > 7 else None
+    ref_epoch = 2016.0 if gaia_release in {"dr3", "edr3"} else 2015.5
+    return bp, rp, bp_err, rp_err, ra, dec, pmra, pmdec, ref_epoch
+
+
+  async def fetch_gaia_bp_rp_by_position(ra_deg, dec_deg):
+    if ra_deg is None or dec_deg is None:
+      return None, None
+
+    adql = f"""
+    SELECT TOP 20 RA_ICRS, DE_ICRS, BPmag, RPmag, e_BPmag, e_RPmag
+    FROM \"I/355/gaiadr3\"
+    WHERE 1 = CONTAINS(
+      POINT('ICRS', RA_ICRS, DE_ICRS),
+      CIRCLE('ICRS', {ra_deg}, {dec_deg}, 0.0005)
+    )
+    """
+    payload = await vizier_json_query(adql)
+    if payload is None:
+      return None, None, None, None
+
+    data = payload.get("data", [])
+    if not data:
+      return None, None, None, None
+
+    best = None
+    for vals in data:
+      if len(vals) < 4:
+        continue
+      row_ra = parse_float(vals[0])
+      row_dec = parse_float(vals[1])
+      bp = normalize_value(vals[2])
+      rp = normalize_value(vals[3])
+      bp_err = normalize_value(vals[4]) if len(vals) > 4 else None
+      rp_err = normalize_value(vals[5]) if len(vals) > 5 else None
+      if row_ra is None or row_dec is None:
+        continue
+      dist = angular_separation_arcsec(ra_deg, dec_deg, row_ra, row_dec)
+      cand = (dist, bp, rp, bp_err, rp_err)
+      if best is None or cand[0] < best[0]:
+        best = cand
+    if best is None:
+      return None, None, None, None
+    return best[1], best[2], best[3], best[4]
+
+
+  def angular_separation_arcsec(ra1_deg, dec1_deg, ra2_deg, dec2_deg):
+    ra1 = math.radians(ra1_deg)
+    dec1 = math.radians(dec1_deg)
+    ra2 = math.radians(ra2_deg)
+    dec2 = math.radians(dec2_deg)
+    cos_sep = (
+      math.sin(dec1) * math.sin(dec2)
+      + math.cos(dec1) * math.cos(dec2) * math.cos(ra1 - ra2)
+    )
+    cos_sep = max(-1.0, min(1.0, cos_sep))
+    return math.degrees(math.acos(cos_sep)) * 3600.0
+
+
+  def propagate_position_deg(ra_deg, dec_deg, pmra_masyr, pmdec_masyr, dt_yr):
+    if ra_deg is None or dec_deg is None:
+      return ra_deg, dec_deg
+    if pmra_masyr is None or pmdec_masyr is None:
+      return ra_deg, dec_deg
+
+    cos_dec = math.cos(math.radians(dec_deg))
+    if abs(cos_dec) < 1e-8:
+      return ra_deg, dec_deg
+
+    dra_deg = (pmra_masyr * dt_yr) / (3.6e6 * cos_dec)
+    ddec_deg = (pmdec_masyr * dt_yr) / 3.6e6
+    new_ra = (ra_deg + dra_deg) % 360.0
+    new_dec = max(-90.0, min(90.0, dec_deg + ddec_deg))
+    return new_ra, new_dec
+
+
+  async def fetch_wise_w1_w2_by_position(ra_deg, dec_deg, radius_arcsec=20):
+    if ra_deg is None or dec_deg is None:
+      return None, None, None, None, None, None, None, None
+
+    adql = f"""
+    SELECT TOP 20 RAJ2000, DEJ2000, W1mag, e_W1mag, W2mag, e_W2mag, W3mag, e_W3mag, W4mag, e_W4mag
+    FROM \"II/328/allwise\"
+    WHERE 1 = CONTAINS(
+      POINT('ICRS', RAJ2000, DEJ2000),
+      CIRCLE('ICRS', {ra_deg}, {dec_deg}, {radius_arcsec}/3600.0)
+    )
+    """
+    payload = await vizier_json_query(adql)
+    if payload is None:
+      return None, None, None, None, None, None, None, None
+
+    best = None
+    for row in payload.get("data", []):
+      if len(row) < 6:
+        continue
+      row_ra = parse_float(row[0])
+      row_dec = parse_float(row[1])
+      w1 = normalize_value(row[2])
+      w1e = normalize_value(row[3])
+      w2 = normalize_value(row[4])
+      w2e = normalize_value(row[5])
+      w3 = normalize_value(row[6]) if len(row) > 6 else None
+      w3e = normalize_value(row[7]) if len(row) > 7 else None
+      w4 = normalize_value(row[8]) if len(row) > 8 else None
+      w4e = normalize_value(row[9]) if len(row) > 9 else None
+      if row_ra is None or row_dec is None:
+        continue
+      if w1 is None and w2 is None:
+        continue
+      dist = angular_separation_arcsec(ra_deg, dec_deg, row_ra, row_dec)
+      cand = (dist, w1, w1e, w2, w2e, w3, w3e, w4, w4e)
+      if best is None or cand[0] < best[0]:
+        best = cand
+
+    if best is None:
+      return None, None, None, None, None, None, None, None
+    return best[1], best[2], best[3], best[4], best[5], best[6], best[7], best[8]
+
+
+  def compute_wise_match_radius_arcsec(pmra_masyr, pmdec_masyr, dt_yr):
+    if pmra_masyr is None or pmdec_masyr is None:
+      return 45.0
+    mu_tot = math.sqrt(pmra_masyr * pmra_masyr + pmdec_masyr * pmdec_masyr)
+    # Proper-motion displacement in arcsec across delta-time.
+    displacement = abs(dt_yr) * mu_tot / 1000.0
+    # Add safety margin for astrometric/catalog offsets.
+    return max(20.0, min(300.0, displacement + 12.0))
+
+
+  def recompute_derived_fields(data):
+    m_g = compute_absolute_g(data)
+    data["M_G_mag"] = None if m_g is None else f"{m_g:.2f}"
+
+    if m_g is not None and (m_g < M_G_MDWARF_MIN or m_g > M_G_MDWARF_MAX):
+      data["teff_K"] = None
+      data["M_Ks_mag"] = None
+      data["feh_duque_dex"] = None
+      data["radius_rsun"] = None
+      data["mass_msun"] = None
+      data["logg_cgs"] = None
+      return (
+        f"&#9888; <strong>M<sub>G</sub> = {m_g:.2f}</strong> is outside the M-dwarf range "
+        f"({M_G_MDWARF_MIN}&#8211;{M_G_MDWARF_MAX} mag); derived parameters not reported.",
+        "",
+      )
+
+    teff, teff_sigma, teff_note = compute_teff_from_color(data)
+    data["teff_K"] = None if teff is None else f"{teff} \u00b1 {teff_sigma}"
+    data["_teff_sigma"] = teff_sigma  # for dynamic footnote
+
+    feh_value, feh_sigma, m_ks, feh_note = compute_duque_feh(data)
+    radius, radius_sigma, mass, mass_sigma, logg, logg_sigma, stellar_note = compute_radius_mass_logg(data)
+
+    data["M_Ks_mag"] = None if m_ks is None else f"{m_ks:.3f}"
+    data["feh_duque_dex"] = None if feh_value is None else f"{feh_value:.3f} ± {feh_sigma:.3f}"
+    data["radius_rsun"] = None if radius is None else f"{radius:.3f} ± {radius_sigma:.3f}"
+    data["mass_msun"] = None if mass is None else f"{mass:.3f} ± {mass_sigma:.3f}"
+    data["logg_cgs"] = None if logg is None else f"{logg:.3f} ± {logg_sigma:.3f}"
+    notes = " ".join(n for n in [teff_note, feh_note, stellar_note] if n)
+    return notes, ""
+
+
+  def start_edit(key, event=None):
+    if key not in EDITABLE_KEYS:
+      return
+    EDITING_KEYS.add(key)
+    if LAST_RESULT:
+      render_table(LAST_RESULT)
+
+
+  def apply_value(key, event=None):
+    global LAST_RESULT
+
+    if not LAST_RESULT or key not in EDITABLE_KEYS:
+      return
+
+    node = document.getElementById(f"manual_{key}")
+    if node is None:
+      return
+
+    val = normalize_value(node.value)
+    if val is None:
+      set_status(f"No value entered for {key}.", "warn")
+      return
+
+    updated = LAST_RESULT.copy()
+    updated[key] = val
+    if key in PHOT_KEYS:
+      feh_note, stellar_note = recompute_derived_fields(updated)
+      status_msg = "Value applied. " + feh_note + " " + stellar_note
+    else:
+      status_msg = "Value applied."
+
+    LAST_RESULT = updated
+    EDITING_KEYS.discard(key)
+    save_cached_result(document.getElementById("target_name").value.strip(), updated)
+    render_table(updated)
+    set_status(status_msg, "ok")
+
+
+  def render_table(data):
+    hidden_keys = {
+      "ra_deg",
+      "dec_deg",
+      "gaia_ra_deg",
+      "gaia_dec_deg",
+      "gaia_pmra_masyr",
+      "gaia_pmdec_masyr",
+      "gaia_ref_epoch",
+      "GBP_err",
+      "GRP_err",
+      "W1_err",
+      "W2_err",
+      "W3_err",
+      "W4_err",
+      "otype_txt",
+      "refs_html",
+      "_teff_sigma",
+    }
+    labels = {
+      "main_id": "Object identifier",
+      "sp_type": "Spectral type",
+      "parallax_mas": "Parallax [mas]",
+      "G_mag": "<strong>G</strong> [mag]",
+      "J_mag": "<strong>J</strong> [mag]",
+      "H_mag": "<strong>H</strong> [mag]",
+      "K_mag": "<strong>K<sub>s</sub></strong> [mag]",
+      "GBP_mag": "<strong>G<sub>BP</sub></strong> [mag]",
+      "GRP_mag": "<strong>G<sub>RP</sub></strong> [mag]",
+      "W1_mag": "<strong>W1</strong> [mag]",
+      "W2_mag": "<strong>W2</strong> [mag]",
+      "W3_mag": "<strong>W3</strong> [mag]",
+      "W4_mag": "<strong>W4</strong> [mag]",
+      "M_G_mag": "<strong>M<sub>G</sub></strong> [mag]",
+      "M_Ks_mag": "<strong>M<sub>Ks</sub></strong> [mag]",
+      "teff_K": "<strong>T<sub>eff</sub></strong> [K]<sup title='Pecaut &amp; Mamajek (2013)'>a</sup>",
+      "feh_duque_dex": "<strong>[Fe/H]</strong> [dex]<sup title='Duque-Arribas et al. (2021)'>b</sup>",
+      "radius_rsun": "<strong>R<sub>&#x2605;</sub></strong> [R<sub>&#x2609;</sub>]<sup title='Mann et al. (2015)'>c</sup>",
+      "mass_msun": "<strong>M<sub>&#x2605;</sub></strong> [M<sub>&#x2609;</sub>]<sup title='Mann et al. (2015)'>d</sup>",
+      "logg_cgs": "<strong>log g</strong> [cgs]<sup title='from R and M'>e</sup>",
+    }
+    teff_sigma = data.get("_teff_sigma")
+    if teff_sigma == 150:
+      fn_a = (
+        "<sup>a</sup> Pecaut &amp; Mamajek (2013) quadratic + Filippazzo et al. (2015) "
+        "linear extension for M7&#8211;L0 (G<sub>BP</sub>&#8722;G<sub>RP</sub> &gt; 4.0); "
+        "&sigma; &#8776; 150&nbsp;K."
+      )
+    else:
+      fn_a = (
+        "<sup>a</sup> Pecaut &amp; Mamajek (2013), ApJS&nbsp;208,&nbsp;9: "
+        "G<sub>BP</sub>&#8722;G<sub>RP</sub> &#8594; T<sub>eff</sub> quadratic sequence; &sigma; &#8776; 100&nbsp;K."
+      )
+    FOOTNOTES = (
+      fn_a + "<br>"
+      "<sup>b</sup> Duque-Arribas et al. (2021, CS20.5 conference poster): photometric [Fe/H] from "
+      "G<sub>BP</sub>&#8722;G<sub>RP</sub>, W1&#8722;W2, and M<sub>Ks</sub>; &sigma; &#8776; 0.10 dex.<br>"
+      "<sup>c</sup> Mann et al. (2015), ApJ&nbsp;804,&nbsp;64, Table&nbsp;1: radius polynomial in M<sub>Ks</sub>; &sigma; &#8776; 3%.<br>"
+      "<sup>d</sup> Mann et al. (2015), Table&nbsp;1: mass-luminosity polynomial in M<sub>Ks</sub>; &sigma; &#8776; 2%.<br>"
+      "<sup>e</sup> log&nbsp;g = log&nbsp;g<sub>&#x2609;</sub> + log(M/M<sub>&#x2609;</sub>) &#8722; 2&nbsp;log(R/R<sub>&#x2609;</sub>)."
+    )
+    rows_html = []
+    for k, v in data.items():
+      if k in hidden_keys:
+        continue
+      label = labels.get(k, k)
+      if k in EDITABLE_KEYS and (v is None or k in EDITING_KEYS):
+        current_value = "" if v is None else v
+        cell = (
+          f'<div class="inline-actions">'
+          f'<input id="manual_{k}" class="table-input" type="number" step="any" value="{current_value}" placeholder="Enter value" />'
+          f'<button class="apply-btn" data-key="{k}">Apply</button>'
+          f'</div>'
+        )
+        action_cell = ""
+      else:
+        cell = "" if v is None else f'<span class="value-wrap">{v}</span>'
+        if k in EDITABLE_KEYS:
+          action_cell = f'<button class="edit-btn" data-key="{k}">Edit</button>'
+        else:
+          action_cell = ""
+      rows_html.append(f'<tr><th>{label}</th><td>{cell}</td><td class="actions">{action_cell}</td></tr>')
+
+    rows = "".join(rows_html)
+    refs_html = data.get("refs_html") or ""
+    refs_block = f"<div class='fn-block' style='margin-top:0.4rem;'><strong>SIMBAD references:</strong><br>{refs_html}</div>" if refs_html else ""
+    document.getElementById("result").innerHTML = (
+      f"<table>{rows}</table>"
+      f"<div class='fn-block'>{FOOTNOTES}</div>"
+      f"{refs_block}"
+    )
+    document.getElementById("manual").innerHTML = ""
+    attach_table_handlers()
+    if hasattr(window, "MathJax"):
+      window.MathJax.typesetPromise()
+    render_sed_plot(data)
+    render_hr_plot(data)
+
+
+  def render_sed_plot(data):
+    """Render a Vega-flux SED (Jy vs wavelength) using Plotly."""
+    if not hasattr(window, "Plotly"):
+      return
+
+    # (band key, effective wavelength μm, Vega zero-point Jy, error key or None)
+    band_info = [
+      ("V_mag",    0.548,  3565.0,   None),
+      ("GBP_mag",  0.532,  3552.0,   "GBP_err"),
+      ("G_mag",    0.673,  2862.0,   None),
+      ("GRP_mag",  0.797,  2554.0,   "GRP_err"),
+      ("J_mag",    1.235,  1594.0,   None),
+      ("H_mag",    1.662,  1024.0,   None),
+      ("K_mag",    2.159,   667.2,   None),
+      ("W1_mag",   3.353,   309.54,  "W1_err"),
+      ("W2_mag",   4.603,   171.787, "W2_err"),
+      ("W3_mag",  11.561,   31.674,  "W3_err"),
+      ("W4_mag",  22.088,    8.363,  "W4_err"),
+    ]
+
+    wl_list, flux_list, err_list, name_list = [], [], [], []
+    for band_key, wl, f0, err_key in band_info:
+      mag = parse_float(data.get(band_key))
+      if mag is None:
+        continue
+      flux = f0 * 10.0 ** (-mag / 2.5)
+      mag_err = parse_float(data.get(err_key)) if err_key else None
+      flux_err = flux * (math.log(10.0) / 2.5) * mag_err if mag_err is not None else 0.0
+      wl_list.append(wl)
+      flux_list.append(flux)
+      err_list.append(flux_err)
+      name_list.append(band_key.replace("_mag", ""))
+
+    sed_card = document.getElementById("sed_card")
+    if not wl_list:
+      sed_card.style.display = "none"
+      return
+
+    trace = {
+      "x": wl_list,
+      "y": flux_list,
+      "error_y": {
+        "type": "data",
+        "array": err_list,
+        "color": "#ff7849",
+        "thickness": 1.5,
+        "width": 5,
+        "visible": True,
+      },
+      "mode": "markers+lines",
+      "type": "scatter",
+      "text": name_list,
+      "hovertemplate": "<b>%{text}</b><br>\u03bb = %{x} \u03bcm<br>F\u03bd = %{y:.3g} Jy<extra></extra>",
+      "marker": {"color": "#ff7849", "size": 10, "symbol": "circle"},
+      "line": {"color": "#ffb06899", "width": 1.5, "dash": "dot"},
+    }
+
+    layout = {
+      "plot_bgcolor": "#201114",
+      "paper_bgcolor": "#160b0e",
+      "font": {"color": "#f8ebe6", "family": "Space Grotesk, sans-serif", "size": 13},
+      "xaxis": {
+        "title": {"text": "Wavelength (\u03bcm)"},
+        "type": "log",
+        "gridcolor": "#ffffff18",
+        "linecolor": "#ffffff44",
+        "tickcolor": "#ffffff44",
+        "color": "#f8ebe6",
+      },
+      "yaxis": {
+        "title": {"text": "F\u03bd (Jy)"},
+        "type": "log",
+        "gridcolor": "#ffffff18",
+        "linecolor": "#ffffff44",
+        "tickcolor": "#ffffff44",
+        "color": "#f8ebe6",
+      },
+      "margin": {"l": 65, "r": 25, "t": 45, "b": 55},
+      "height": 380,
+      "title": {
+        "text": "Spectral Energy Distribution",
+        "font": {"size": 15},
+        "x": 0.04,
+      },
+    }
+
+    sed_card.style.display = "block"
+    window.eval(
+      f"Plotly.newPlot('sed_plot', {json.dumps([trace])}, "
+      f"{json.dumps(layout)}, {{responsive:true}})"
+    )
+
+
+  async def fetch_hr_background_sample():
+    """Fetch a Gaia DR3 <20 pc sample for the HR diagram background, with localStorage cache."""
+    global HR_BG_DATA
+    raw = window.localStorage.getItem(HR_CACHE_KEY)
+    if raw is not None:
+      try:
+        HR_BG_DATA = json.loads(raw)
+        return HR_BG_DATA
+      except Exception:
+        pass
+
+    adql = """
+    SELECT TOP 800 BPmag, RPmag, Gmag, Plx
+    FROM "I/355/gaiadr3"
+    WHERE Plx > 50
+      AND BPmag IS NOT NULL
+      AND RPmag IS NOT NULL
+      AND Gmag IS NOT NULL
+    """
+    payload = await vizier_json_query(adql, timeout_s=20)
+    if payload is None:
+      return None
+    rows = []
+    for row in payload.get("data", []):
+      if len(row) < 4:
+        continue
+      bp = parse_float(row[0])
+      rp = parse_float(row[1])
+      g  = parse_float(row[2])
+      plx = parse_float(row[3])
+      if None in (bp, rp, g, plx) or plx <= 0:
+        continue
+      import math as _m
+      m_g = g + 5.0 * _m.log10(plx) - 10.0
+      rows.append({"col": bp - rp, "m_g": m_g})
+    HR_BG_DATA = rows
+    window.localStorage.setItem(HR_CACHE_KEY, json.dumps(rows))
+    return rows
+
+
+  def render_hr_plot(data):
+    """Overplot the target on a Gaia HR diagram with the <20 pc background sample."""
+    if not hasattr(window, "Plotly"):
+      return
+
+    bg = HR_BG_DATA or []
+    bg_col  = [r["col"] for r in bg]
+    bg_mg   = [r["m_g"] for r in bg]
+
+    target_col = None
+    target_mg  = None
+    gbp = parse_float(data.get("GBP_mag"))
+    grp = parse_float(data.get("GRP_mag"))
+    m_g_str = data.get("M_G_mag")
+    if gbp is not None and grp is not None and m_g_str is not None:
+      target_col = gbp - grp
+      target_mg  = parse_float(m_g_str)
+
+    main_id = data.get("main_id") or "Target"
+
+    trace_bg = {
+      "x": bg_col,
+      "y": bg_mg,
+      "mode": "markers",
+      "type": "scatter",
+      "name": "<20 pc sample",
+      "marker": {"color": "#ffb068", "size": 4, "opacity": 0.35, "symbol": "circle"},
+      "hovertemplate": "G<sub>BP</sub>&#8722;G<sub>RP</sub> = %{x:.2f}<br>M<sub>G</sub> = %{y:.2f}<extra><20 pc</extra>",
+    }
+
+    traces = [trace_bg]
+
+    if target_col is not None and target_mg is not None:
+      trace_tgt = {
+        "x": [target_col],
+        "y": [target_mg],
+        "mode": "markers",
+        "type": "scatter",
+        "name": main_id,
+        "marker": {"color": "#ff7849", "size": 14, "symbol": "star",
+                   "line": {"color": "#fff", "width": 1.5}},
+        "hovertemplate": f"<b>{main_id}</b><br>G<sub>BP</sub>&#8722;G<sub>RP</sub> = %{{x:.2f}}<br>M<sub>G</sub> = %{{y:.2f}}<extra></extra>",
+      }
+      traces.append(trace_tgt)
+
+    layout = {
+      "plot_bgcolor": "#201114",
+      "paper_bgcolor": "#160b0e",
+      "font": {"color": "#f8ebe6", "family": "Space Grotesk, sans-serif", "size": 13},
+      "xaxis": {
+        "title": {"text": "G<sub>BP</sub> \u2212 G<sub>RP</sub>"},
+        "gridcolor": "#ffffff18",
+        "linecolor": "#ffffff44",
+        "tickcolor": "#ffffff44",
+        "color": "#f8ebe6",
+        "range": [-0.2, 4.5],
+      },
+      "yaxis": {
+        "title": {"text": "M<sub>G</sub> (mag)"},
+        "gridcolor": "#ffffff18",
+        "linecolor": "#ffffff44",
+        "tickcolor": "#ffffff44",
+        "color": "#f8ebe6",
+        "autorange": "reversed",
+      },
+      "margin": {"l": 65, "r": 25, "t": 45, "b": 55},
+      "height": 380,
+      "legend": {"x": 0.02, "y": 0.05, "font": {"size": 11},
+                 "bgcolor": "#0000", "bordercolor": "#0000"},
+      "title": {"text": "HR Diagram (&lt;20 pc)", "font": {"size": 15}, "x": 0.04},
+    }
+
+    sed_card = document.getElementById("sed_card")
+    sed_card.style.display = "block"
+    window.eval(
+      f"Plotly.newPlot('hr_plot', {json.dumps(traces)}, "
+      f"{json.dumps(layout)}, {{responsive:true}})"
+    )
+
+
+  def render_manual_fields(missing_keys, current_data):
+    document.getElementById("manual").innerHTML = ""
+
+
+  LAST_RESULT = {}
+
+
+  async def run_lookup(event=None, force_refresh=False):
+    global LAST_RESULT, HR_BG_DATA
+
+    target = document.getElementById("target_name").value.strip()
+    if not target:
+      set_status("Please enter a target name.", "warn")
+      return
+
+    # Fetch HR background sample once (cached in localStorage)
+    if HR_BG_DATA is None:
+      set_status("Fetching &lt;20 pc HR diagram sample...", "ok", loading=True)
+      ok_hr, _ = await run_with_timeout(fetch_hr_background_sample(), 20)
+      if not ok_hr:
+        pass  # non-fatal; HR plot will just show no background
+
+    cached = None if force_refresh else load_cached_result(target)
+    if cached is not None:
+      critical_missing = [key for key in ("GBP_mag", "GRP_mag", "W1_mag", "W2_mag") if cached.get(key) is None]
+      if critical_missing:
+        cached = None
+
+    if cached is not None:
+      EDITING_KEYS.clear()
+      set_refresh_button_visible(True)
+      LAST_RESULT = cached.copy()
+      render_table(cached)
+      missing_cached = [k for k in PHOT_KEYS if cached.get(k) is None]
+      render_manual_fields(missing_cached, cached)
+      if missing_cached:
+        set_status(f"Loaded cached values for '{target}'. Some fields are still missing and can be filled below.", "warn")
+      else:
+        set_status(f"Loaded cached values for '{target}' (no refetch needed).", "ok")
+      return
+
+    set_refresh_button_visible(False)
+    EDITING_KEYS.clear()
+
+    set_status(f"Resolving '{target}' in SIMBAD...", "ok", loading=True)
+    document.getElementById("result").innerHTML = ""
+    document.getElementById("manual").innerHTML = ""
+    document.getElementById("sed_card").style.display = "none"
+
+    safe_target = target.replace("'", "''")
+
+    adql = f"""
+    SELECT TOP 1
+      b.main_id AS main_id,
+      b.ra AS ra_deg,
+      b.dec AS dec_deg,
+      b.plx_value AS parallax_mas,
+      b.sp_type AS sp_type,
+      b.otype_txt AS otype_txt,
+      f.G AS G_mag,
+      f.J AS J_mag,
+      f.H AS H_mag,
+      f.K AS K_mag
+    FROM ident id
+    JOIN basic b ON id.oidref = b.oid
+    LEFT JOIN allfluxes f ON b.oid = f.oidref
+    WHERE id.id = '{safe_target}'
+    """
+
+    try:
+      payload = await tap_query(adql)
+      data = payload.get("data", [])
+
+      if not data:
+        set_status("Target not found in SIMBAD with that exact identifier. Try another alias.", "error")
+        return
+
+      row = data[0]
+      keys = [
+        "main_id",
+        "ra_deg",
+        "dec_deg",
+        "parallax_mas",
+        "sp_type",
+        "otype_txt",
+        "G_mag",
+        "J_mag",
+        "H_mag",
+        "K_mag",
+      ]
+      result = {k: normalize_value(v) for k, v in zip(keys, row)}
+      set_status("SIMBAD core photometry fetched. Looking for Gaia/WISE complements...", "ok", loading=True)
+
+      # Start with unknown values; try automatic external fetch from identifiers.
+      result["GBP_mag"] = None
+      result["GBP_err"] = None
+      result["GRP_mag"] = None
+      result["GRP_err"] = None
+      result["W1_mag"] = None
+      result["W1_err"] = None
+      result["W2_mag"] = None
+      result["W2_err"] = None
+      result["W3_mag"] = None
+      result["W3_err"] = None
+      result["W4_mag"] = None
+      result["W4_err"] = None
+      result["gaia_ra_deg"] = None
+      result["gaia_dec_deg"] = None
+      result["gaia_pmra_masyr"] = None
+      result["gaia_pmdec_masyr"] = None
+      result["gaia_ref_epoch"] = None
+      result["refs_html"] = None
+
+      # Launch identifier + bibcode fetches concurrently
+      ok_ident, ident_payload = await run_with_timeout(fetch_identifiers_for_target(safe_target), 8)
+      ok_refs, refs_payload = await run_with_timeout(fetch_simbad_refs(safe_target, limit=12), 8)
+
+      if ok_refs and refs_payload:
+        links = " &nbsp;·&nbsp; ".join(
+          f'<a href="https://ui.adsabs.harvard.edu/abs/{b}" target="_blank" rel="noopener">{b}</a>'
+          for b in refs_payload if b
+        )
+        result["refs_html"] = links
+
+      identifiers = ident_payload if ok_ident and ident_payload is not None else []
+      gaia_source_id = None
+      gaia_release = None
+      wise_designation = None
+      for ident in identifiers:
+        if gaia_source_id is None and gaia_release is None:
+          gaia_parsed = extract_gaia_source_id(ident)
+          if gaia_parsed is not None:
+            gaia_release, gaia_source_id = gaia_parsed
+        if wise_designation is None:
+          wise_designation = extract_wisea_designation(ident)
+
+      autofill_notes = []
+      if gaia_source_id is not None:
+        set_status("Gaia match found. Fetching <strong>G<sub>BP</sub></strong> and <strong>G<sub>RP</sub></strong>...", "ok", loading=True)
+        ok_gaia, gaia_vals = await run_with_timeout(fetch_gaia_bp_rp_by_id(gaia_release, gaia_source_id), 5)
+        if ok_gaia and gaia_vals is not None:
+          gbp, grp, gbp_err, grp_err, gaia_ra, gaia_dec, gaia_pmra, gaia_pmdec, gaia_ref_epoch = gaia_vals
+          if gbp is not None:
+            result["GBP_mag"] = gbp
+          if gbp_err is not None:
+            result["GBP_err"] = gbp_err
+          if grp is not None:
+            result["GRP_mag"] = grp
+          if grp_err is not None:
+            result["GRP_err"] = grp_err
+          result["gaia_ra_deg"] = None if gaia_ra is None else str(gaia_ra)
+          result["gaia_dec_deg"] = None if gaia_dec is None else str(gaia_dec)
+          result["gaia_pmra_masyr"] = None if gaia_pmra is None else str(gaia_pmra)
+          result["gaia_pmdec_masyr"] = None if gaia_pmdec is None else str(gaia_pmdec)
+          result["gaia_ref_epoch"] = None if gaia_ref_epoch is None else str(gaia_ref_epoch)
+          if gbp is not None or grp is not None:
+            autofill_notes.append("Auto-filled <strong>G<sub>BP</sub></strong>/<strong>G<sub>RP</sub></strong> from Gaia " + gaia_release.upper())
+        else:
+          autofill_notes.append("Gaia identifier lookup timed out")
+
+      if result.get("GBP_mag") is None or result.get("GRP_mag") is None:
+        set_status("Trying Gaia positional fallback for <strong>G<sub>BP</sub></strong>/<strong>G<sub>RP</sub></strong>...", "ok", loading=True)
+        ra_deg = parse_float(result.get("ra_deg"))
+        dec_deg = parse_float(result.get("dec_deg"))
+        ok_gaia_pos, gaia_pos_vals = await run_with_timeout(fetch_gaia_bp_rp_by_position(ra_deg, dec_deg), 5)
+        if ok_gaia_pos and gaia_pos_vals is not None:
+          gbp2, grp2, gbp_err2, grp_err2 = gaia_pos_vals
+          if result.get("GBP_mag") is None and gbp2 is not None:
+            result["GBP_mag"] = gbp2
+          if result.get("GBP_err") is None and gbp_err2 is not None:
+            result["GBP_err"] = gbp_err2
+          if result.get("GRP_mag") is None and grp2 is not None:
+            result["GRP_mag"] = grp2
+          if result.get("GRP_err") is None and grp_err2 is not None:
+            result["GRP_err"] = grp_err2
+          if gbp2 is not None or grp2 is not None:
+            autofill_notes.append("Auto-filled missing Gaia colors from positional fallback")
+
+      if result.get("W1_mag") is None or result.get("W2_mag") is None:
+        set_status("Querying AllWISE via CDS/VizieR positional xmatch...", "ok", loading=True)
+        gra = parse_float(result.get("gaia_ra_deg"))
+        gdec = parse_float(result.get("gaia_dec_deg"))
+        gpmra = parse_float(result.get("gaia_pmra_masyr"))
+        gpmdec = parse_float(result.get("gaia_pmdec_masyr"))
+        ge = parse_float(result.get("gaia_ref_epoch"))
+
+        if gra is not None and gdec is not None and ge is not None:
+          # AllWISE epoch is ~2010.5; propagate Gaia coordinates to reduce misses for high-PM stars.
+          dt_yr = 2010.5 - ge
+          ra_wise, dec_wise = propagate_position_deg(gra, gdec, gpmra, gpmdec, dt_yr)
+          wise_radius = compute_wise_match_radius_arcsec(gpmra, gpmdec, dt_yr)
+          set_status(
+            f"AllWISE xmatch: propagated Gaia epoch {ge:.1f} -> 2010.5, radius={wise_radius:.1f} arcsec...",
+            "ok",
+            loading=True,
+          )
+        else:
+          ra_wise = parse_float(result.get("ra_deg"))
+          dec_wise = parse_float(result.get("dec_deg"))
+          wise_radius = 60.0
+          set_status("AllWISE xmatch: Gaia PM unavailable, using SIMBAD position with 60 arcsec radius...", "ok", loading=True)
+
+        ok_wise_pos, wise_pos_vals = await run_with_timeout(fetch_wise_w1_w2_by_position(ra_wise, dec_wise, wise_radius), 10)
+        if ok_wise_pos and wise_pos_vals is not None:
+          w1p, w1e, w2p, w2e, w3p, w3e, w4p, w4e = wise_pos_vals
+          if result.get("W1_mag") is None and w1p is not None:
+            result["W1_mag"] = w1p
+          if w1e is not None:
+            result["W1_err"] = w1e
+          if result.get("W2_mag") is None and w2p is not None:
+            result["W2_mag"] = w2p
+          if w2e is not None:
+            result["W2_err"] = w2e
+          if w3p is not None:
+            result["W3_mag"] = w3p
+          if w3e is not None:
+            result["W3_err"] = w3e
+          if w4p is not None:
+            result["W4_mag"] = w4p
+          if w4e is not None:
+            result["W4_err"] = w4e
+          if w1p is not None or w2p is not None:
+            autofill_notes.append("Auto-filled missing <strong>W1</strong>/<strong>W2</strong> from CDS/VizieR AllWISE xmatch")
+        else:
+          autofill_notes.append("CDS/VizieR AllWISE lookup timed out")
+
+      feh_note, stellar_note = recompute_derived_fields(result)
+
+      render_table(result)
+      save_cached_result(target, result)
+
+      missing = [k for k in PHOT_KEYS if result.get(k) is None]
+      LAST_RESULT = result.copy()
+
+      if missing:
+        extra = (" " + "; ".join(autofill_notes) + ".") if autofill_notes else ""
+        set_status(
+          "SIMBAD resolved target, but some values are missing. Fill them manually below. " + feh_note + " " + stellar_note + extra,
+          "warn",
+        )
+        render_manual_fields(missing, result)
+      else:
+        extra = (" " + "; ".join(autofill_notes) + ".") if autofill_notes else ""
+        set_status("All requested properties were found. " + feh_note + " " + stellar_note + extra, "ok")
+
+    except Exception as exc:
+      if isinstance(exc, asyncio.TimeoutError):
+        set_status("Query timed out while contacting a remote service. Please retry; cached results will be used once available.", "error")
+      else:
+        set_status(f"Query failed: {exc}", "error")
+
+
+  async def refresh_cache(event=None):
+    target = document.getElementById("target_name").value.strip()
+    if not target:
+      set_status("Enter a target name before refreshing cache.", "warn")
+      return
+    clear_cached_result(target)
+    set_refresh_button_visible(False)
+    set_status(f"Cache cleared for '{target}'. Fetching fresh data...", "ok", loading=True)
+    await run_lookup(force_refresh=True)
+
+
+  def apply_manual_values(event=None):
+    global LAST_RESULT
+
+    if not LAST_RESULT:
+      set_status("No target result to update yet.", "warn")
+      return
+
+    updated = LAST_RESULT.copy()
+    changed = False
+
+    for key in PHOT_KEYS:
+      node = document.getElementById(f"manual_{key}")
+      if node is None:
+        continue
+      val = normalize_value(node.value)
+      if val is not None and val != "":
+        updated[key] = val
+        changed = True
+
+    if not changed:
+      set_status("No manual values entered.", "warn")
+      return
+
+    feh_note, stellar_note = recompute_derived_fields(updated)
+
+    LAST_RESULT = updated
+    save_cached_result(document.getElementById("target_name").value.strip(), updated)
+    render_table(updated)
+
+    still_missing = [k for k in PHOT_KEYS if updated.get(k) is None]
+    render_manual_fields(still_missing, updated)
+
+    if still_missing:
+      set_status("Manual values applied. Some fields are still missing. " + feh_note + " " + stellar_note, "warn")
+    else:
+      set_status("Manual values applied. Dataset is now complete for Phase 1. " + feh_note + " " + stellar_note, "ok")
+
+
+  # ── Startup: pre-fetch the <20 pc HR background sample silently ──────────
+  async def _preload_hr():
+    global HR_BG_DATA
+    if HR_BG_DATA is not None:
+      return
+    # Check localStorage first (fast path — no network if already cached)
+    raw = window.localStorage.getItem(HR_CACHE_KEY)
+    if raw is not None:
+      try:
+        HR_BG_DATA = json.loads(raw)
+        return
+      except Exception:
+        pass
+    # Not cached — fetch quietly in the background
+    await fetch_hr_background_sample()
+
+  asyncio.ensure_future(_preload_hr())
+    </script>
+</body>
+</html>

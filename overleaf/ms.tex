@@ -1,0 +1,647 @@
+\documentclass[
+    traditabstract,
+    longauth,
+    onecolumn,
+]{aa}
+%\usepackage[utf8]{inputenc}
+\usepackage{colortbl}
+%\usepackage{xcolor}
+%\usepackage{verbatim}
+%\usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm]{geometry}
+%\usepackage[figuresleft]{rotating}
+%\usepackage[]{minted}
+%\usepackage{tabularx}
+%\setminted{breaklines}
+%\usepackage{acronym}
+%\usepackage{multirow}
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+%\usepackage{wrapfig}
+\usepackage[rightcaption]{sidecap}
+%\sidecaptionvpos{figure}{c}
+%\def \amakihi{\char"02BB AMAKIHI}
+\def \amakihi{`AMAKIHI}
+\def \MJ{M$_{\mathrm{Jup}}$}
+\def \RJ{R$_{\mathrm{Jup}}$}
+\def \ME{M$_{\oplus}$}
+\def \RE{R$_{\oplus}$}
+\def \RS{R$_{\odot}$}
+\def \MS{M$_{\odot}$}
+\def \teff{$T_\mathrm{eff}$}
+\def \kms{km\,s$^{-1}$}
+\def \ms{m\,s$^{-1}$}
+\def \mp{$M_{\rm p}$}
+\def \rt{$\mathrm{R_{\oplus}}$}
+\def \mt{$\mathrm{M_{\oplus}}$}
+\def \starmass{M_\mathrm{s}}
+\def \spi{SPIRou}
+\def \esp{ESPaDOnS}
+\def \wena{Wenaokeao}
+\linespread{1}  % interligne 
+\selectfont  
+
+
+\begin{document}
+
+\section{Scientific justification }
+\subsection{Executive summary}
+
+Wide-range, high-resolution spectrographs have been among the most demanded instruments in ground-based astronomy since a few decades. They combine a multiplicity of spectral diagnostics and the high precision from the multiplex gain of adding thousands of stellar lines, either for low-amplitude velocity variations, faint magnetic signatures, or secondary spectra embedded in the noise of the primary star. With the \amakihi\ survey using \wena, all of these strategies will be used to take advantage of the unique advantages of this instrument: a continuous spectral range from 370 to 2450\,nm at a 70\,000 resolution with spectropolarimetry. The stellar sample carefully selected by our team to offer a high-quality legacy value to the community with individual spectra and long time series of derived spectroscopic values. It is composed of a variety of stars covering all ranges of interest, from the Galaxy assembly to stellar formation and evolution, and exoplanetary census of the solar neighbourhood. \\
+
+The \amakihi\ program is designed to explore a wide variety of fundamental questions of today's astronomy and contributes to the main ongoing roadmaps of the discipline. In a nutshell, the survey addresses the following questions:\begin{itemize}
+    \item What are the most nearby habitable planets in the solar neighbourhood, in what system do they evolve? This is critical as a preparation to future ELT and space-based characterization programs
+    \item What is the internal structure of planets (to be completed)
+    \item How diverse are the dynamics and compositions of exoplanet atmospheres?
+    \item What are the roles of magnetic field in the stellar formation process, accretion, early stages of planetary formation and along stellar evolution, in various mass ranges?
+    \item What can we learn from the chemical inventory of the first stars in the Galaxy? What is the composition and dynamical history of black hole binaries?
+\end{itemize}
+
+Some of the programs explore variability on timescales of days to years (planetary orbits, stellar rotation or pulsations, stellar magnetic cycles, black hole in binaries) while others explore the diversity of worlds and stars, with snapshots of minutes to few hours durations (planetary atmospheres and first stars). \\
+
+The \amakihi\ survey is modular by nature; it is composed of snapshot spectra, of time-critical long sequences, and of time series of spectra of a variety of carefully chosen stellar sub-samples. It is always possible to reduce the number of monitored stars, remove one science topic, or limit the number of visits per star. The science objectives of the survey, however, require some statistical dimension in the six chosen science work packages. Since the first Letter of Intent submitted in 2024, a large scaling down effort has already taken place. If less nights are available, we may have to remove one or several sub-samples from the program and request PI time instead. The strongest synergies of \amakihi\ at present lie in the interplay between stellar magnetic field, stellar environments, and exoplanets; they represent the survey core science. A few sub-samples that are less directly connected were adjoined to represent and include the community of \esp\ users as to explore other aspects of stellar physics with the benefit of an homogeneous observing strategy of the \amakihi\ program -spectropolarimetry in the full combined mode of \wena\ and the processing of advanced products. We strongly advocate that the full proposed survey is our preferred design as a community stand point, although it does require more than the options offered in terms of volume. \\
+
+The total request is XX nights. It is spread throughout year, with an overdensity from RA = 3 to 8h due to the PLATO Southern field and the young stellar associations. The largest part of our targets is known in advance and should be protected against observation duplication. The other part of the targets will be replaced by better options once Gaia DR4 and PLATO candidates will be released. Gaia DR4 candidates are expected before the start of the survey and impact WP1 and WP6. PLATO candidates will start coming in at the end of 2027 and will have an impact on WP2 and WP5. \\
+
+The \amakihi\ team is composed of astronomers experts in stellar and planetary physics and high-resolution spectropolarimetry. Several WP members have contributed to the construction of the instruments, their pipeline, and their operations. We are ready to continue this contribution by offering a support to CFHT, in particular to improve the \esp\ pipeline (adaptation to \wena\ format, telluric correction, velocimetry) and help with scheduling and survey monitoring. We will propose teams of "baby sitters" that regularly follow the data quality and adapts the program scheduling. We are open to train and include Hawaiian students in this task and scientific endeavor.\\
+
+With \amakihi, we are confident that we propose and offer a comprehensive view of the large science questions that are posed in the field of stellar, planetary, and galactic astronomy. The coming years with the unique instrument \wena\, in one of the best-quality skies in the world, will allow collecting benchmark data for decades to come. 
+
+\newpage
+
+\subsection{Introduction and science context (1 page)}
+The \amakihi\ community survey aims to reveal the physical properties of stars and exoplanets using optical and near-infrared (nIR) spectropolarimetry and high-precision velocimetry with \wena. We have gathered all interested experts of the Canadian and French communities to provide a comprehensive program with a strong legacy value, with the following scientific questions in mind: i) what is the composition of the nearest exoplanet population and what are the main systems of interest for further characterization? ii) what are the dynamics and chemistry of exoplanetary atmospheres? iii) what are the main physical processes controlling the earliest stages of stellar and planetary formation and further evolution? iv) what roles does the magnetic field play across the HR diagram? v) what is the impact of chemistry on the formation of the first population of stars and the evolution of long-period black-hole binaries?
+
+The simultaneous use of \spi\ and \esp\ is optimal for exploring all the topics we propose and will be the preferred mode of the survey: combined spectropolarimetry in both spectral ranges will result in an efficiency boost for most stars; spectroscopic indices provide extended diagnostics on the chemical peculiarities of the observed stars (e.g., on temporal variations of activity or on complex accretion processes); velocimetry in a wider domain will apply to a variety of systems, and extremely valuable to investigate some exoplanet candidate systems from Gaia and PLATO space missions. In particular, the instrument capacity in the $K$ band is a unique property worldwide. The rich science case of a 6-year  survey thus conveys a large community of \esp\ and \spi\ users.
+
+We propose a program with a strong legacy value while answering key astrophysical questions in various fields of galactic astronomy. \wena\ indeed represents a unique instrumentation in a great site and offers opportunities that will benefit our understanding of physical processes in many aspects: exoplanet internal structure, orbital architecture, atmospheric profile and habitability, stellar and planetary formation, stellar evolution, internal structure and magnetic phenomena in stars, the formation of first stars and the population of extreme binaries. 
+We divided the program into six complementary work packages that request programs of different volumes.
+The proposed community survey name, \amakihi, stands for «Activity, Magnetism, Atmospheres and Keplerian Investigations of Host stars and Interactions», and is the name of a Hawaiian forest bird.
+
+The survey outcome includes long-term time series of radial velocities (RV) and polarized spectra of a variety of stars, homogeneous data analysis in a range of stellar diagnostics - atomic and molecular abundances, magnetic field, chromospheric and photospheric activity indices, mean stellar line properties, veiling, accretion properties, medium-precision optical RVs and high-precision nIR RVs, as well as planetary characterizations -mainly atmospheric properties, composition, dynamics, and potentially planetary magnetic fields. We aim at providing the scientific community with a large sample of homogeneous data sets and advanced products. We plan to leave a few hours per semester open for an internal call to our registered community, aiming especially at the younger researchers, provided the scientific objective and observing strategy are compliant with the global survey plan. These could be snapshot observations to prepare further PI proposals, for instance.\\
+
+\subsection{WP1: Nearby exoplanets}
+
+\textbf{Science Objective} 
+
+
+Unveiling the exoplanet population around nearby low-mass stars is of prime importance to constrain the mechanisms of planetary formation and evolution, and ultimately to identify the most favorable targets for the atmospheric characterisation of terrestrial planets in or near the habitable zone.
+M~dwarfs, which constitute nearly 80\% of the stellar population in the solar neighbourhood, have emerged as prime targets for exoplanetary surveys: their small radii and masses provide access to planets of lower minimum mass for a given RV precision, and their ubiquity makes them statistically indispensable for occurrence-rate studies.
+Recent RV surveys have established a high occurrence rate of low-mass planetary systems around M~dwarfs \citep{ribas2023, Mignon2025}, confirming that these stars typically host multiple rocky planets on short-to-intermediate orbital periods.
+Yet a significant fraction of the nearest M~dwarfs remains entirely uncharted in radial velocity (RV), and the planetary census within 10\,pc (the horizon relevant for future atmospheric characterisation) is far from complete.
+Within that context, we oriented this blind search towards two different axes: 1). Completing and finalizing the search of small exoplanets around small stars in the closest solar neighbourhood 2). Characterizing inner architecture of planetary systems with massive outer planet.
+
+The exoplanet science roadmap toward post-2030 instrumentation places the transition from detection to characterisation as its central objective.
+Combining high-contrast imaging with high-resolution spectroscopy on the next generation of large telescopes will enable the direct detection of reflected-light spectra from rocky planets \citep{snellen_combining_2015}, and potentially the identification of atmospheric biosignatures \citep{marconi2020}. 
+Future instruments such as ANDES@ELT and PCS@ELT \citep{Kasper_pcs_2021} will push this frontier further, but only for systems whose planetary masses, orbital architectures, and stellar environments are already well constrained by RV surveys.
+In this context, the nearest low-mass stars, and particularly those within 10\,pc accessible from the ELT site, represent a non-renewable resource: any planet discovered around them by \spi\ today is a direct candidate for ELT characterisation tomorrow.
+\spi\ has played a central role in building this census since joining the quest in 2019 \citep{Donati2020b}.
+In the CFHT solar neighbourhood, \spi\ has already revealed several new low-mass planets around nearby M~dwarfs \citep{moutou2024, cortes2025, carmona2025, ouldelhkim2026, charpentier2026}, including systems within 3.5\,pc, demonstrating both the maturity of the instrument and the pace at which this nearby census is being built.
+
+Understanding the complete architecture of planetary systems is essential for tracing the history of their formation and long-term dynamical evolution.
+A central open question concerns the correlation between inner and outer system architectures: does the presence of a massive outer planet favor or disadvantage the formation of inner low-mass companions? 
+Disentangling the roles of inward migration \citep{alibert2006} and in-situ formation \citep{chiang2013} requires multi-epoch, long-baseline RV datasets covering a broad range of orbital periods, precisely what this Community Survey is designed to produce.
+At the population level, the homogeneous, volume-limited RV sample assembled by the \spi\ (SLS+SPICE+PLANETS) programme, with $\sim$200 visits per star across more than 70 targets, constitutes one of the most statistically uniform M-dwarf datasets to date. 
+Maintaining this homogeneity through the present survey is essential for future occurrence-rate analyses, which require uniform detection sensitivity across the sample to avoid the biases that have affected earlier, heterogeneous compilations.
+
+
+\textbf{Observational Strategy}
+
+Operating in the near-infrared ($Y$ to $K$ bands), \spi\ brings a key advantage through the chromaticity of the velocity field: since stellar activity signals and planetary Doppler shifts respond differently to wavelength, the simultaneous coverage of hundreds of spectral lines across a wide nIR baseline provides an intrinsic lever arm to separate the two contributions.
+This has translated into a demonstrably greater resilience to activity-induced RV noise in the specific case of fast-rotating, highly active M~dwarfs \citep{carmona_near-ir_2023, larue2025}, and more generally underpins the chromatic diagnostics that are central to the methodology of the present programme.
+\amakihi\ inaugurates, for the first time, the automatic and systematic simultaneous use of \spi\ (nIR) and \esp\ (optical) on the same telescope.
+This operational mode is a qualitative step forward with respect to earlier quasi-simultaneous efforts combining \spi\ with an optical spectrograph at a separate facility \citep{carmona_near-ir_2023}, which required coordination between two independent consortia and could not guarantee truly simultaneous coverage.
+\textit{It also mirrors the NIRPS+HARPS strategy recently demonstrated on the ESO 3.6~m with the closest system Proxima \citep{suarez2025}.}
+While \esp\ is not a precision-RV spectrograph in the sub-meter-per-second sense, its simultaneous optical coverage provides an irreplaceable set of chromospheric activity diagnostics, Ca~\textsc{ii} H\&K, Na~\textsc{i}~D, and H$\alpha$ (see Fig. \ref{fig:aumic}, that encode the instantaneous state of chromospheric activity at the time of each \spi\ exposure.
+These indicators are not available from the nIR alone, and their simultaneity with the RV measurement is essential: activity signals evolve on timescales comparable to or shorter than a single observing night, and any temporal offset between the RV and its activity proxy degrades the quality of the subsequent modelling.
+
+
+
+Beyond the RV time series and chromospheric indices, the consortium brings specific methodological capabilities that further enrich the activity characterisation. 
+We will employ the line-by-line (LBL) method \citep{artigau_line-by-line_2022} on both \spi\ and \esp\ data, which computes individual RV contributions from each spectral line rather than a single cross-correlation function.
+This approach naturally yields the \texttt{dtemp} activity index \citep{artigau_measuring_2024}, which quantifies the differential RV response between temperature-sensitive and temperature-insensitive lines across the full spectral range of each instrument, and constitutes a powerful in-built tracer of photospheric activity rooted directly in the spectra.
+Complementarily, both \spi\ and \esp\ are spectropolarimeters: the longitudinal magnetic field $B_\ell$, derived from their respective Stokes~$V$ profiles, traces large-scale surface magnetic structures on timescales from rotational to magnetic cycle, and has become a standard activity regressor in \spi\ exoplanet analyses \citep{cortes2023}. 
+The simultaneous availability of $B_\ell$ from both instruments provides an independent cross-check of the large-scale magnetic topology at optical and nIR wavelengths that neither instrument can deliver alone.
+
+
+The combination of all of these simultaneous time series, nIR radial velocities, optical chromospheric indices, \texttt{dtemp} and $B_\ell$ from both instruments, creates the most information-rich input currently achievable for stellar activity modelling in the context of exoplanet detection.
+Multi-dimensional Gaussian Process (GP) frameworks \citep{rajpaul2015, haywood_unsigned_2022, hara2025} exploit this richness by modelling the RV time series jointly with multiple activity indicators as correlated outputs of a shared latent process, thereby constraining the covariance structure of the activity signal with far fewer degrees of freedom than a GP trained on the RV alone.
+\textit{Each additional well-chosen activity indicator either tightens the posterior on the activity hyper-parameters or, when orthogonal to the RV channel, leaves the planetary signal unaffected, it never degrades it.}
+In the regime of low-amplitude planetary signals buried in correlated noise, this gain in sensitivity can be the difference between a marginal hint and a robust detection.
+
+
+
+\textbf{Samples} 
+
+
+Concerning the complete search for the nearest systems, the first sub-sample targets nearby M~dwarfs ($d < 10$\,pc) that have never been observed in RV and are accessible from the ELT site, prioritized by $H$-band brightness, which directly optimizes the planet-to-star contrast ratio and the apparent planetary magnitude in reflected light.
+These represent golden targets: any planet discovered around them would be among the most favorable candidates for direct characterisation with the ELT.
+The second sub-sample targets moderately active K~dwarfs ($d < 10$\,pc, $\log R'_\mathrm{HK} > -4.7$), also previously unobserved in RV and ELT-accessible. 
+K~dwarfs are particularly compelling: their habitable zones lie at longer orbital periods than those of M~dwarfs, their exceptional near-infrared brightness maximizes planet flux in reflected light, and their higher luminosity means that temperate planets receive irradiation levels more comparable to the Earth than the closest-in planets of M~dwarfs. 
+Their moderate activity makes them challenging for purely optical high-precision instruments, but the simultaneous \spi+\esp\ mode described above is ideally suited to this regime: the full multi-tracer arsenal, chromospheric indices, \texttt{dtemp}, and $B_\ell$, feeds directly into the GP activity models, enabling robust planetary signal extraction even in the presence of significant stellar variability.
+
+
+Concerning the complete architecture of M dwarfs systems, the third sub-sample therefore continues the long-term monitoring of targets already engaged in the \spi\ PLANETS programme.
+Any interruption of this coverage would irreversibly degrade the orbital period completeness at $P > 100$~days that the survey has been built to achieve.
+The fourth sub-sample addresses a forthcoming discovery space opened by Gaia~DR4. 
+Gaia astrometry will reveal, at population scale, giant planets on intermediate-to-long orbital periods around nearby M~dwarfs, but astrometry alone cannot constrain the inner architecture of these systems.
+RV monitoring over several years is required to detect lower-mass interior companions (super-Earths or sub-Neptunes) whose presence or absence is the decisive observable to discriminate between competing formation scenarios. 
+Starting from the M-dwarf census within 15\,pc and applying current giant-planet occurrence rates \citep{Mignon2025}, we estimate that Gaia~DR4 will deliver approximately ten high-confidence candidates accessible to \spi\ at the required signal-to-noise.
+This sub-sample will become available after Gaia~DR4 is released, end of 2026.
+
+
+Finally, the 6-year survey baseline is scientifically necessary to fulfil all of the science cases described above.
+Our experience with the \spi\ Legacy Surveys demonstrates that GP activity models require 3 to 4 observing seasons to converge robustly: single-season fits can misidentify correlated activity signals as planetary candidates, while multi-season baselines progressively constrain the covariance hyper-parameters and disentangle the two contributions. \textcolor{red}{a reference for this statement? we will argue below that the Moon constraint makes us need an additional season for the same detection limit, so it's ambivalent. }
+Detection completeness for sub-Neptune planets at $P \sim 400$~days and super-Earths at $P \sim 100$~days similarly demands multi-year phase coverage unachievable within a standard semester-length PI programme.
+The Gaia~DR4 giant-planet detections will themselves be weighted toward periods of several hundred days, further requiring a long temporal baseline for inner-system characterisation.
+The 6-year duration of this Community Survey is therefore the minimum horizon compatible with all science cases, and constitutes a strategic investment in the long-term scientific return of CFHT's unique dual-instrument capability.
+
+\subsection{WP2: Planetary interiors}
+Transiting exoplanets are rare but they currently provide the greatest potential for characterization, as both their sizes and orbital parameters are precisely constrained from transit data \citep[e.g.,][]{cadieux_toi-1452_2022,kiefer_sub-neptube_2023}. RV follow-up of such systems gives access to the critical mass and eccentricity determination, and sometimes the planet obliquity \citep{martioli_spin-orbit_2020}. Ground-based observations of current space transit missions are a critical part of the process to characterize these transiting systems. At the time of the community survey, the ESA PLATO and ARIEL mission will be in operation, providing us with new transiting candidates, while TESS will be continuing its full-sky survey. %In addition, many astrometric targets identified by Gaia will become available in the data releases. We will observe a sample of such candidates and the expected outcome is the measured mass and orbital properties of several dozen candidates.\\
+The proposed two sub-components of WP2 are in line with the programs already conducted in the SLS, SPICE, and PLANETS programs. The observations will be performed using both \spi\ and \esp\ in polarimetric mode to combine the spectroscopic, velocimetric and polarimetric characterizations of the systems. We propose two complementary programs: (1) mass measurements of transiting giant planets around M dwarfs (GEMS) to constrain their formation, and (2) mass characterization of key ARIEL and PLATO targets.%, with an opening to constrain star-planet interactions, or space weather of exoplanet hosts (Vidotto+2023).}
+
+%Precise mass measurements of transiting exoplanets are essential for atmospheric characterization, interior structure modeling, and constraining planet formation pathways. With its m\,s$^{-1}$ precision in the near-infrared, \spi\ is uniquely suited to measure planets orbiting low-mass stars. 
+
+
+\subsubsection{How do GEMS form?}
+GEMS are rare ($\sim$0.1--0.2\%) and more common around higher-mass stars \citep{bryant_occurrence_2023,glusman_searching_2026}. While consistent with core accretion (CA), this trend is not definitive; gravitational instability (GI) remains viable, particularly in low-mass disks. The key observable is bulk metal enrichment. For non-inflated planets (equilibrium temperature below 1000~K), mass and radius directly constrain heavy-element content: at fixed mass, metal-rich planets are smaller. With $\sim$10\% mass and $\sim$3\% radius precision, interior models recover metal fractions to $\sim$10\% \citep{Thorngren2016}, revealing a mass--metallicity relation for giants around Sun-like stars.
+
+Around M dwarfs, formation conditions differ: lower disk masses hinder classical core growth \citep{Andrews2013, Miguel2020, Schlecker2022}. Competing pathways predict distinct signatures: GI yields near-stellar compositions with weak mass dependence, whereas core and pebble accretion predict increasing enrichment toward lower-mass giants.
+
+We will establish the first mass--metallicity relation for GEMS using a sample of $\sim$50 non-inflated ($T_{\rm eq} < 1000$~K) systems. Radii ($\sim$3\%) are available from TESS; the limiting factor is $\sim$10\% mass precision, achievable with SPIRou. Host-star abundances will be obtained with \spi\ and \esp. Combining radial velocities with transit constraints will yield planetary metal enrichment and directly test formation pathways: a flat distribution favors GI, while a mass-dependent trend supports core or pebble accretion. {\bf This program will provide a decisive test of giant planet formation in the low-mass stellar regime.}
+
+\subsubsection{Mass characterization of ARIEL and PLATO targets}
+
+The ARIEL mission (launch 2029) will open a new era of exoplanet atmospheric characterization by surveying a large, statistically meaningful sample of planets---primarily gas giants---complementing the detailed but limited studies enabled by the James Webb Space Telescope.
+
+Robust interpretation of transmission spectra critically depends on accurate planetary masses. The atmospheric signal scales inversely with the product of bulk density and mean molecular weight ($\mu$), making mass the dominant source of uncertainty once the radius is well constrained. Without precise masses, constraints on $\mu$, and thus atmospheric composition, remain fundamentally degenerate. We will remove this bottleneck by delivering $\sim$10\% mass measurements for all ARIEL targets lacking this precision, enabling the mission’s full statistical potential and robust comparative atmospheric studies.
+
+The PLATO mission (launch 2027) will provide a complementary stream of targets, primarily around solar-type stars but also including a significant population of planets orbiting low-mass stars. Many of these will be well suited for infrared radial-velocity follow-up. Although PLATO fields are predominantly in the southern hemisphere, we anticipate a subset (of order a dozen) accessible to SPIRou, offering high-impact opportunities for precise mass characterization.
+
+
+\subsection{WP3: Young magnetic stars, accretion processes and planet formation}
+{\bf General context:}
+Stars and their planets form from the collapse of dense molecular clouds that yield, due to rotation, extended accretion disks of gas and dust, where protostars and young planetary systems are born. Studies of these initial phases of star/planet formation are key in understanding the origin of worlds both similar and different from our Solar System. Magnetic fields play a major role in these phases. By controlling accretion, triggering outflows and jets, and producing intense stellar activity, magnetic fields critically impact the evolution of pre-main-sequence (PMS) stars and their disks and largely dictate their angular momentum (AM) evolution \citep{Hartmann_Accretion_2016,Feiden_Magnetic_2016,Amard_Effects_2023}. %\citep{Hartmann_Accretion_2016,Frank_Jets_2014,Johnstone_Classical_2014,Feiden_Magnetic_2016,Amard_Effects_2023}.
+They can cause PMS stars to spin down (by coupling them to the inner disk regions) and alter the disk dynamics and planet formation \citep{Bouvier_Angular_2014,Manara_Demographics_2023}. 
+%\citep{Bouvier_Angular_2014,Alexander_Dispersal_2014,Manara_Demographics_2023}. 
+
+% There is now growing evidence that accretion onto the stars is not a smooth process, but is done in a stochastically and episodic manner. 
+Accretion onto PMS stars operates in a stochastic manner.  
+Photospheric light-curves show, indeed, that one third of the low-mass PMS (i.e., T~Tauri) stars have bursts on timescales of several rotation periods, with amplitudes up to 2 mag, and without cyclicity \citep{Cody_Continuum_2017,Herczeg2023}. Bursts are accompanied by increased energetic flux from disk material falling on the star, affecting the stellar structure, the stellar magnetosphere, the inner disk, and potential inner planets, which in turn alter the accretion process, the disk chemistry, and planet formation \citep{Fischer_Accretion_2023}. The origin of these bursts is not well understood and is possibly linked to inner disk clumps or instabilities \citep{Ji2026}, and/or magnetic star-disk interactions. In particular, it is not clear how changes in the large-scale magnetic field on timescales of a few months to several years influence these processes.  %\citep{Donati_Monitoring_2026}.
+
+%At the same time, during the PMS phase, stars experience intense magnetic activity causing energetic X-ray and UV flux that affects also the disc and planet formation \citep{Skinner_XMMNewton_2017,Brunn_Ionization_2023}. While the intense observed magnetic fields are generally believed to be due to internal dynamo action in the convective envelope of the star, we are far from understanding how such process is able to produce the variety of observed magnetic fields and their variability. In particular we still don't know if magnetic fields in young stars are cyclical, such as our Sun, and few other MS stars \citep{Kapyla_Simulations_2023}. We don't know either whether accretion processes, including bursts, are able to affect magnetic field properties by modifying the flows in the convection zone after the impact of material on the surface. Finally, while we believe that, as in our Sun, magnetic fields play a role in the intense stellar winds observed in young stars, we are missing observational evidence for such a link.  
+Moreover, as a result of their intense fields, PMS stars generate energetic X-rays and UVs that affect the structure of the disk and thereby planet formation \citep{Skinner_XMMNewton_2017,Brunn_Ionization_2023}.  Monitoring the temporal evolution of these fields is therefore essential for our understanding of star/planet formation.  Although the fields are believed to be due to internal dynamo action in the stellar convective envelopes, it is not clear how they vary with time and whether they are cyclical, like in the Sun, 
+%those of our Sun and other MS stars \citep{Kapyla_Simulations_2023}, 
+or rather chaotic. The extent to which accretion processes can affect magnetic properties by modifying the structure of stellar convective zones \citep{Geroux2016}, and to boost outflows from PMS stars and their inner disks \citep{Matt2012}, also needs to be carefully investigated.  
+
+%In particular, we need to understand how the magnetic field changes on various timescales, and depends on mass, age, rotation rate, accretion state, and potential evidence of inner planets. 
+
+~
+
+{\bf \noindent Objectives:}
+To quantitatively assess the effect of magnetic fields on star/planet formation for low- and intermediate-mass PMS stars, one critically needs, for a statistically significant stellar sample, observational constraints on their fields, accretion and inner disk properties, all at once, and their temporal variations, on a range of timescales. To investigate the star-disk-planet interaction, we also need to detect and characterize close-in planets that may be orbiting in the inner disk.  More specifically, {\bf the key questions we will address in our program are as follows:} (i) How do large-scale magnetic topologies of the selected PMS stars respond to the main stellar parameters (mass, age, accretion rate) as these stars progress in the HR diagram?  (ii) How do the fluctuating accretion patterns relate to and vary with the magnetospheric geometry and dictate the AM evolution of the PMS stars?  (iii) Are massive young planets frequent in the inner regions of accretion disks and what is their impact on magnetospheric accretion processes and star formation, and on the young planetary system architectures?  
+
+Recent studies based on data from various instruments \citep[including \esp\ at optical wavelengths and \spi\ in near IR at CFHT, e.g.,][]{Donati2013,Yu2019,Finociety2023,Cristofari2025} have already yielded significant results.  In particular, they 
+%, we have started to perform simultaneous studies of magnetic fields and accretion properties either in the optical or in the NIR domain for a limited number of stars. In particular, all studies 
+ demonstrated general agreement with the standard picture of magnetospheric accretion in T~Tauri stars in which the large-scale (mostly dipolar) component of the stellar magnetic field funnels material from the inner disk rim to the stellar surface, 
+%. Material reaches the surface at free-fall velocities (measured in optical H I lines), 
+producing strong shocks and bright chromospheric accretion regions detected in multiple accretion lines (e.g.,  H$\alpha$, H$\beta$, Pa$\beta$ and Br$\gamma$ lines, the 588 and 1083~nm He~I lines, the Ca~II IR triplet, see Fig.~\ref{fig:fig1_wp3}). The geometry of the accretion pattern depends on the topology and strength of the large-scale magnetic field and on the mass-accretion rate \citep[e.g.,][]{Blinova2016,Romanova2025}.  When the large-scale field is strong enough to evacuate the inner disk up to the corotation radius (where the Keplerian orbital period equals the stellar rotation period), the geometry of accretion funnels is well defined and more or less stable, while the star expels outward most of the AM from the disk and maintains a slow rotation rate \citep[e.g.,][]{Zanni2013}.  However, if the large-scale field cannot evacuate the disk further than about 60\% of the corotation radius, disk material penetrates the magnetosphere through the magnetic field lines, and accretion proceeds in a much more erratic way, while the star progressively spins up as a result of the accreted AM.  Moreover, magnetospheric accretion processes are also expected to affect the migration of giant planets within the inner accretion disk \citep[e.g.,][]{Romanova2026} and thereby the whole architecture of young planetary systems.  
+
+{\bf Spectropolarimetric observations with \esp\ or \spi\ have allowed us to document magnetospheric accretion and dynamo processes in a small number of PMS stars}, mostly solar-mass ones with low accretion rates \citep[e.g.,][]{Zaire2024}.  For example, we demonstrated that the dynamo fields of PMS stars were usually strong and simple for fully convective PMS stars and more complex and less axisymmetric for mostly radiative ones \citep[e.g.,][]{Donati2020a}.  We also showed that magnetospheric accretion processes behave as predicted, both for stars with magnetic fields strong enough to force slow rotation \citep{Donati2020b,Zaire2024} and for those with weaker large-scale fields that started to spin up \citep{Donati2024}.  Moreover, we were able to put constraints on the masses of close-in planets, either those known to transit their host stars \citep{Finociety2023,Donati2025} or candidate ones \citep[e.g.,][]{Zaire2024}.  In particular, \spi\ observations carried out over multiple runs within a given semester and over successive seasons enabled us {\bf to investigate these topics on a variety of timescales}, yielding at the same time enhanced capability of extracting planet RV signatures from the dominant activity jitter of the host star.  However, very few stars featuring high accretion rates \citep[e.g.,][]{Donati2026} and even less of intermediate masses, whose observations are tougher to analyze as a result of the stochastic nature of accretion processes that 
+drastically affect the whole spectrum in multiple ways (e.g., veiling, flares), have yet been monitored extensively.  {\bf Progressing further in this study thus mandatorily requires regularly monitoring a wide enough sample of PMS stars with various masses, ages, and accretion rates, to scrutinize their magnetospheric accretion, dynamo processes, and close-in planet formation.}  
+
+A key asset in this goal is to {\bf take advantage of simultaneous spectropolarimetric data collected from both optical and near IR domains with \esp\ and \spi}, each providing essential and complementary information on the dynamo and magnetospheric accretion processes.  Zeeman polarization signatures diagnosed from a larger number of spectral lines give access to a more precise large-scale field, while Zeeman broadening yielding small-scale field estimates, can be better estimated from the wider domain owing to the $\lambda^2$ dependence of the Zeeman effect.  Moreover, spot temperatures at the stellar surface can be measured more accurately from the spot-to-photosphere brightness contrast, much stronger in the optical than in the near IR domain.  In addition, accretion proxies in the \esp\ and \spi\ spectra are very complementary. The 588~nm He~I line and Ca~II IR triplet provide information on magnetic fields at the footprints of accretion funnels, while the 1083~nm He~I, Pa$\beta$, Br$\gamma$, H$\alpha$ and H$\beta$ lines probe accretion funnels as well as winds from the star and the inner disk.  Last but not least, the wider spectral domain of \esp\ and \spi\ can drastically improve our ability to distinguish between chromatic radial velocity (RV) changes induced by activity and achromatic ones induced by close-in planets, and will thus provide stronger constraints on the potential presence of candidate planets. Until now, very few studies were able to exploit contemporaneous data from optical \esp\ and near IR \spi\ spectra \citep[e.g.,][]{Donati2024b}, but {\bf this will now be routinely feasible thanks to \wena\ at CFHT}.  
+
+{\bf \noindent Immediate goals of WP3:} In practice, we will monitor within WP3 a sample of 26 PMS stars with masses (in the range 0.3-4~\MS), ages (0.5-20~Myr), and accretion rates (0.001-10$\times10^{-8}$~\MS/yr) evenly spread over the selected region of the HR diagram (see Fig.~\ref{fig:fig2_wp3}) and providing minimal sampling of our 3-parameter space.  Each star will be visited about 120 times over 3~seasons throughout the 12 semesters of \amakihi\ using Stokes $V$ spectropolarimetry, to investigate magnetic and accretion changes over timescales of days to months and years, and search for potential close-in planets, for a total exposure time of 189~CFHT nights (see Technical justification for a detailed description of priorities).  For each visit, we will reach peak SNRs of 200 per pixel for most stars, either in \spi\ spectra for stars cooler than 4500~K (whose spectra are richer in the \spi\ domain) or in \esp\ spectra otherwise (the other instrument reaching a lower SNR for the same exposure time).  From these data, we will reconstruct, for each season, large-scale magnetic topologies and small-scale field strengths with Zeeman-Doppler Imaging (ZDI) and ZeeTurbo \citep{Donati2006,Cristofari2025}, as well as surface maps of brightness and accretion features \citep[as in, e.g.,][]{Donati2024b}.  We will also  look for potential close-in planets \citep{Finociety2023,Zaire2024} while monitoring at the same time the accretion pattern and its temporal evolution \citep{Bouvier2023,Sousa2023}.  {\bf This will provide the whole community with the most extensive, long-term, and homogeneous high-resolution optical and near-IR spectropolarimetric survey of low- and intermediate-mass PMS stars to date, from which we will infer an unprecedented comprehensive description of their magnetic fields, accretion processes and close-in planets. }  We also plan to have a second, complementary, PI program focused on binary PMS stars, to further examine differences in accretion processes and magnetic topologies induced by binarity (for various secondary to primary mass ratios).
+
+
+\subsection{WP4: Exoplanetary atmospheres (1.5p)}
+%\textcolor{red}{In a few years, \spi\ has proven to be one of the three best instruments worldwide for the  characterization of exoplanets’ atmospheric composition and dynamics. These observations  consist of consecutive sequences of spectra (several hours long) taken at transit times or near eclipses. The \spi\ domain contains the HeI 1083 nm line tracing the exosphere (Allart+2023, Masson+2024) as well as numerous molecular lines (H2O, CH4, TiO, CO) tracing the lower atmosphere (Boucher+2023, Pelletier+2021, Hood+2024). Detecting these species brings constraints on their abundances at a given altitude, their velocity and on the pressure-temperature profile (Debras+2024, Klein+2024), forming a required basis to understand chemical mixing, formation history, and atmospheric dynamics in giant planet. Accessing the CO band in K band being particularly important here. The key questions that we aim to address are therefore: can we constrain precisely the atmospheric composition of exoplanet atmospheres? What are the dominant physical and chemical mechanisms at play? How do we link these atmospheres with interior structure and formation/evolution scenarios? Simultaneous nIR/optical observations will greatly help in providing answers to these questions. Firstly, the optical range includes atomic lines of planetary atmospheres that would complete the chemical probing, like Fe, CaII, Na, HI, K. As a dynamical system, the planetary atmospheres are prone to variability, and simultaneity is key to a full description of the atmosphere’s chemistry and physics. Secondly, different species probe different pressure levels and longitude: increasing the number of simultaneously detected species is the path to a multi-dimensional understanding of the atmosphere. In addition, some molecules (e.g., H2O, TiO) have bands in both spectral domains.\\
+%Stellar activity can also be a challenge for atmospheric characterization (i.e., light source effects; Lim+2023). With \esp\ and \spi\ domains combined in a joint observation, it will be possible to characterize the activity level and properties very precisely. Finally, combining high-resolution and low-resolution spectroscopy offers the best opportunity for the study of exoplanet atmospheres and benefits from the largest wavelength range. \wena\, associated with HST and JWST and in preparation for Ariel/ESA dedicated surveys, is the most exciting combination to understand at-depth exoplanet atmosphere physics and composition in waiting for the ELTs.\\
+%We therefore expect \wena\ to be one of if not the best instruments for atmospheric study of exoplanets worldwide, with three main goals. We will first build and improve our tools on high SNR targets to combine optical and nIR data and obtain the best achievable 3D constraints of atmospheres. We will then optimize our combination with space-based instruments such as JWST to obtain the best possible constraints on planetary atmospheres and prepare for the Ariel and ELT era. Finally, we will gather many observations of difficult targets to assess the capability of \wena\, and later on, ANDES, to detect the atmospheres of smaller, cooler planets, aiming for Earth-sized planets in the long term. This is a continuation of several PI programs using \spi\ including Atmospherix, recently included into the multi-agency PLANETS survey.}
+
+
+\spi has proven to be an excellent instrument for the characterisation of exoplanet atmospheres at high spectroscopic resolution (HRS), notably due to its wide spectral range making it competitive with larger telescopes \citep{snellen_exoplanet_2025}.  The combination with \esp will provide us with the largest continuous wavelength range in the world, from 0.4 to 2.5\,$\mu$m, making \wena\ a unique instrument and a perfect benchmark for ANDES at the ELT. For \amakihi, we have designed an observing strategy following 5 research axes that will optimise the capacity of \wena\ to observe exoplanet atmospheres. This work package is summarized in Figure~\ref{fig:wp4_cartoon}.
+
+
+\subsubsection*{Hot Jupiters in three dimensions}
+Because we can resolve the spectral lines with HRS, we can distinguish between different parts of the atmosphere that have different Doppler shifts. In the PLANETS large program, we focused on the most favourable exoplanets: hot and ultra-hot Jupiters. By observing them at all phases, PLANETS allows to provide 3D constraints on their atmospheres and reliable abundance measurements free from the biases of 1D retrievals. Our first axis is  to continue and extend this successful program to more targets, thanks to the increased signal-to-noise ratios (SNR) which will be enabled by targeting the numerous atomic transitions present at visible wavelengths in these atmospheres. This SNR boost will also allow us to target as yet rarely observed quadrature phases, which will be pivotal to fully connect ground- and space-based phase curves and to test HRS reduction algorithms for weakly accelerating planets.	
+% \textbf{\textit{Time estimate : 4 nights/semester}}
+% \textcolor{red}{Night estimates: they are not in concordance with the target sheet, and they exceed what we can request in high priority. I would remove these estimates from the science justification and give some arguments to justify these numbers in the technical justification (and lower them down)}
+
+\subsubsection*{Magnetic fields of exoplanets}
+\wena\ will be one of only two visible-infrared spectropolarimeters in the world. It will provide the best opportunity to detect exoplanets' magnetic fields for the first time through their polarisation signal. Hot Jupiters are perfectly suited to this goal as they (i) are expected to have the strongest magnetic fields of all exoplanets, (ii) have atomic and molecular lines in the visible and infrared and (iii) offer the best contrast with their host star. With SPIRou, we tentatively detected magnetic field on an exoplanet, but the weakness of the signal needs further observations to confirm. With \wena, we will be able to confirm this signal and detect much fainter signals thanks to the increase in the number of observable lines. With this axis, we push the frontiers of HRS and open a new, exciting window for planetary science.
+
+\subsubsection*{Hydrogen and Helium atmospheric escape}
+With \spi, we have already detected escaping atmospheres in several exoplanets via the He I 1083\,nm triplet \citep{allart_homogeneous_2023,masson_probing_2024}. With \wena, we will be able to simultaneously measure the helium triplet and several stellar activity tracers (H$\alpha$, Na I doublet, Ca II triplet, etc.), enabling a more comprehensive investigation of the connection between stellar activity and planetary atmospheres. In particular, this will allow us to quantify the impact of stellar contamination on inferred atmospheric escape signals. To achieve this goal, we will monitor carefully selected targets with helium signatures known to vary between observing epochs over the full duration of the program, with at least one transit observed per year. Our second objective is to better understand how star–planet interactions shape the helium outflow, potentially transforming it from a quasi-spherical expansion (“bubble”) into an extended stream (Macleod et al. 2025). To address this question, we will observe a small sample of ultra-hot Jupiters known to exhibit helium absorption during transit across a full orbital phase curve by combining observations from multiple nights. This strategy will allow us to constrain the spatial extent and geometry of the outflow. Recent studies \citep{zhang_giant_2023,gully-santiago_large_2024,allart_complex_2025} suggest that helium measurements—and the resulting mass-loss rate estimates—may have been misinterpreted in some cases. Our second objective will therefore also assess the impact of these findings on the most promising targets believed to host extended atmospheric outflows.
+
+
+\subsubsection*{Aiming for reflection spectroscopy}
+One of the main goal of ELT/ANDES will be to measure the reflected light from temperate terrestrial planets orbiting nearby M-dwarf stars. However reflection spectroscopy has so far proven unsuccessful for exoplanets despite the fact that we should be able to observe reflection  in the visible close to secondary eclipse (or to superior conjunction for non transiting planets) where both the angle and Doppler effects are favorable. We identified hot Jupiters suited for both reflection spectroscopy with \esp and simultaneous emission spectroscopy with \spi that allow to develop reflection techniques while mitigating the risk of non detection by studying the emission of these planets. This axis is therefore both a pathfinder to ANDES and a complement of axis 1 by increasing the coverage of the orbital phases of our targets. 
+
+\subsubsection*{Targets of opportunity}
+Finally, we will reserve some time for targets of opportunity: planets with a high scientific interest (young, very eccentric, rare orbital parameters) but with very few available windows of observability, such as V 1298 Tau\,b, HD 80606\,b or HIP 41378\,f (about one per year for HD 80606 and two for the whole proposal for HIP 41378 f). This target list will also be expanded to include any favorable targets which will be discovered over the next six years, notably through the PLATO and GAIA missions.
+
+\subsection{WP5: Stellar magnetism across the HR diagram (1.5p)}
+
+Magnetic fields are crucial throughout the life cycle of stars, impacting their birth, structure, rotation, pulsations, and eventual death, with effects extending to galactic evolution. Breakthrough observations over two decades with \esp\ and \spi\ have shown that magnetic fields affect all types of stars, from M dwarfs to hot stars \citep{wade_mimes_2016,sikora2019,bellotti_long-term_2024}, and from pre-main sequence stars to the latest stages of stellar evolution \citep{folsom_evolution_2016,barron_finding_2022}. WP5 will be organized around four main science questions that stand out today as the most promising avenue to progress our understanding of stellar magnetism through spectropolarimetric observations over the next decade. These science drivers take maximum advantage of the unique instrumental capabilities soon to be offered to the CFHT community in the form of simultaneous high resolution spectropolarimetric monitoring across the full visible and nIR domains. WP5 will address 3 key science questions that can only be investigated with \wena:\\
+
+1- {\bf How do magnetic fields of cool stars evolve during their first Gyr?}
+
+Once pre-main-sequence stars cease interacting with their accretion disks, their rotation rates initially increase as a result of contraction. Upon reaching the main sequence, their angular momentum is then gradually reduced through interactions with magnetized stellar winds. This dramatic rotational evolution is closely linked to the large-scale magnetic field geometry of the star (e.g. Réville+2015). In turn, the evolution of angular momentum strongly impacts the underlying dynamo processes, leading to a progressive weakening of the surface magnetic field and an overall decline in stellar activity. Understanding how magnetic activity evolves in cool PMS stars is also key to explaining the observed spread in lithium abundances and constraining internal transport processes (Jackson et al. 2025). The most comprehensive survey to date of young solar-type stars in open clusters and young associations was conducted using \esp\ (Folsom+2016, 2018), covering ages from 20 to 650\,Myr and masses between 0.85 and 1.2\,\MS. 
+
+We aim to build upon this work by leveraging the unique magnetic sensitivity and unprecedented spectral coverage of \wena, extending the study to lower stellar masses (0.6–0.8 \MS). Our targets are drawn from three well-known associations ($\beta$~Pictoris, AB Doradus, and the Hyades) sampling evolutionary stages from the late pre-main sequence to the early main sequence. This enables us to extend WP3 investigations toward more evolved stellar populations. In addition to characterizing large-scale magnetic field geometries through polarimetric measurements across the full \wena\ spectral domain, we will probe the small-scale magnetic fields of our sample via Zeeman broadening in the nIR, while the visible domain will grant us access to Li abundances and classical chromospheric indices.\\
+
+2- {\bf How do magnetic fields modify stellar internal structure and internal dynamics?} 
+
+Surface magnetic field observations delivered by \wena\ will provide a key boundary condition to internal stellar models derived by asteroseismic measurements. Our survey will comprise pulsating targets of the southern PLATO field (hot stars, Sun-like stars) to pave the way toward a better understanding of the role of internal magnetic fields on stellar evolution.
+
+There are currently few constraints on the strength and geometry of magnetic fields in the deep interiors of hot stars and they are expected to depend strongly on the internal rotation profile. Magnetic fields are also an efficient mechanism for angular momentum transport and impact the efficiency of mixing and therefore the main-sequence lifetimes of hot stars. Asteroseismology is the only existing technique for directly probing stellar interior processes, achieved via precise measurements of stellar pulsations. Three main types of hot pulsators on the main sequence, $\beta$~Cep, slowly pulsating B (SPB), and $\delta$~Scu stars, exhibit p- and/or g-mode pulsations and constitute the hot sub-sample of this thread. Their pulsation frequencies are extremely well-suited to probe interior rotation and mixing processes. The magnetic field acts as a perturbation to the pulsation frequencies, which enables the effective mode identification necessary for asteroseismic modeling, but also allows for a direct measurement of the interior magnetic field. The unique opportunity to combine asteroseismology and spectropolarimetry of PLATO targets provides crucial constraints on the physical ingredients of hot stars.
+We employed data from space photometry and spectropolarimetry to robustly pre-select magnetic pulsators. Multiple observations are acquired to fully characterize their field. These data are necessary to fill the void for magnetic pulsating hot stars, place tight constraints on their interior mixing and rotation profiles, and ultimately improve stellar evolution theory.
+%\textcolor{red}{please add 1-2 refs (refs should be in refwp5.bib in a proper format)}
+
+In Sun-like stars, magnetic cycles leave a detectable seismic imprint in the form of long-term shifts in oscillation frequencies (García et al. 2010), which are correlated with the surface evolution of activity proxies such as starspots. However, a clear connection between this internal seismic signature of magnetism and the long-term modulation of surface magnetic fields observed through spectropolarimetric monitoring (e.g., Bellotti+2025) is still lacking. To achieve a more comprehensive understanding of stellar magnetic cycles (and ultimately to better constrain the underlying dynamo mechanisms) we will monitor a selected sample of Sun-like pulsators within the PLATO field, as well as PLATO M dwarf targets populating locations in the mass-rotation plane poorly explored by WP1 or WP2. These targets will be observed on an annual basis throughout the duration of the \amakihi\ survey, enabling us to track the evolution of their surface magnetic fields. This strategy will benefit from simultaneous PLATO observations, providing detailed seismic characterization alongside robust activity diagnostics.\\
+
+3- {\bf How do magnetic fields influence stellar evolution after the main sequence, and how does that evolution shape magnetic properties?}
+
+Stellar magnetic fields hosted by stars at their final evolutionary blue, yellow, and red supergiant and AGB stages are key to understanding their complex and poorly-characterized post-main-sequence evolution, the magnetic and rotational characteristics of their remnants, their potential role in powering and shaping the mass loss - both sustained and punctuated - experienced by dying stars, and the subsequent impact on galactic evolution. First observations of blue (e.g., Neiner+2018, Wade+2025), yellow (e.g. Barron+2026), and red (e.g. Mathias+2018) supergiants and AGB stars (e.g. Sabin+2015) demonstrate feasibility and provide scientific and technical guidance. This enables an ambitious program using \wena\ to observe a larger sample of selected evolved intermediate mass and massive stars to determine population-level magnetic properties, and field configurations of individual stars (through circular polarimetry) and their related convective motions (through linear polarimetry and high-resolution spectroscopy).\\
+
+4- {\bf Stellar magnetism using data from WP1, WP2, and WP4}\\
+
+Observations conducted within WPs 1, 2, and 4 will be acquired in polarimetric mode. WP5 will be responsible for deriving magnetic diagnostics from these data, providing essential ancillary measurements to mitigate activity-induced jitter in radial velocity time series (Carmona et al. 2025). The same datasets will also enable the reconstruction of large-scale stellar magnetic geometries, which will be used to model star–planet magnetospheric interactions (both for sub-Alfvénic planets and for interactions mediated by magnetized stellar winds). In addition, we will exploit the full sample of low-mass stars observed across the different work packages to advance our understanding of stellar magnetism. In particular, we will investigate how large-scale magnetic fields depend not only on stellar mass and rotation, but also on less explored fundamental parameters such as metallicity.\\   
+
+In summary, \wena\ will establish CFHT as the world’s most powerful observatory for studying stellar magnetism well into the next decade - a unique capability that must be recognized and exploited. While WP 1, 2 and 3 will provide crucial data for stellar magnetism of potential planet-host stars, WP 5 will focus on positioning the magnetism of those hosts into the broader context of stellar evolution. 
+
+\subsection{WP6: Galactic archaeology (1.5p)}
+%\textcolor{red}{We're missing an intro here for non experts -Gaia revolution, global picture in 2-3 sentences}
+One of the challenges that lie ahead of us is to understand the formation and evolution of the Milky Way. While the important role of mergers is now generally accepted, the exact sequence of events in the first three billions of years is still uncertain. The oldest and most metal-poor stars are the witnesses of these early phases. Thanks to the Gaia satellite and its all-sky coverage we are now able to select, both chemically and kinematically, these witnesses among stars that are bright enough that an extensive chemical inventory can be derived from the spectra that can be obtained at CFHT in  \amakihi\ survey. 
+
+While the nature of the First Stars formed exclusively from H and He remains an open question, they quickly enriched the gas with their nucleosynthetic products and paved the way for the formation of a new generation of long-lived low-mass stars with a very low-metal content. Extremely metal-poor stars are thus direct fossils of the earliest epochs of star formation, within the first 1-3 Gyr after the Big Bang. The Pristine survey \citep[][and references therein]{martin_pristine_2024}  has proven to be extremely effective in identifying these exceedingly rare objects among Milky-Way (MW) stars.  The Gaia colour-magnitude diagram of our selected metal-poor stars is shown in Fig.\,\ref{fig:cmd_wp6}.
+We have assembled to date a sample of stars \citep{gonzalez_rivera_galactic_2024}, from which we will draw the sample of metal-poor stars to observe with \wena\, to measure detailed chemical abundances and question the nature of First Stars. Combining this chemical information with astrometric data gathered by Gaia will provide us with a unique opportunity to study the first phases of the formation and early evolution of the MW. In addition, bright stars with the most accurate Gaia stellar parameters \citep{recio-blanco_double_2024} allow selecting the oldest giants through their masses - an additional probe of the early MW. While most of the chemical information in metal-poor giants is contained in the blue, there is a true value in using \spi\ to simultaneously observe molecular transitions and measure CNO abundances, as well as the chromospheric 1083\,nm He I line allowing to measure the He abundance, of cosmological interest.\\
+
+Another focus program will be dedicated to the follow-up of long-distance binary systems revealed by Gaia, where the companion is a black hole (BH) or neutron star. Such rare systems provide insight information on the evolution of massive stars and are the subject of vivid controversies: are they the result of isolated binary evolution or produced by dynamical exchange in clusters? The fourth Gaia data release, that shall be published this year, is expected to provide millions of binaries with maximum periods of 10-20\,yrs, from which BH candidates can be identified \citep[e.g., Gaia BH3 ][]{gaia_collaboration_discovery_2024}.
+\wena\ RVs taken after Gaia observations, of systems with the largest accelerations, will allow us to determine their orbital parameters and derive the mass of the companions, potentially discovering several new BH-star or NS-star systems with wide orbits. This will constrain for the first time the orbital separation distribution of such pairs, as well as provide chemical composition, related to the massive stars’ evolution changes with metallicity \citep{el-badry_formation_2024}.
+
+
+\subsection{Scientific outcomes and connections}
+With this rich program encompassing several key topics, we sought to take advantage of the unique opportunity that \wena\ will soon offer at CFHT. The scientific impact of such a combination of spectropolarimetry, velocimetry and high-resolution spectroscopy in both the optical and nIR domains simultaneously - including the $K$ band as well as the extreme blue - will be huge.
+
+While the observing program will be managed in separate work packages (corresponding to the sections above), there are connections between them. For instance, exoplanet and system characterization requires the best understanding of stellar properties: fundamental parameters like effective temperature, surface gravity, metallic abundances, as well as mass, radius, age, winds, accretion or convection properties. Studying star-planet interactions is an important step toward habitability questions, and the magnetic field plays a key role here. Exoplanet atmospheres cannot be properly modelled if the stellar surface that shines through them is not well characterized - something that \wena\ observations allow. Evolved-star processes will also be looked at from two different communities, with unexpected synergies to welcome. 
+
+
+To illustrate these connections, Figure \ref{fig:SPMI} shows the configuration of interacting stellar and planetary magnetospheres in a typical exoplanet system with a close-in magnetized planet. Recent complex models show that temporal variations are modulated by these interactions at short timescales (Gourv\`es et al, in prep), generating induced flaring onto the stellar surface as well as Ohmic heating in the planet, prone to induce atmospheric escape \citep{strugarek2025}. In \amakihi\, we will explore these powerful mechanisms by: i) measuring the surface field of the host star, that fuels the interactions, ii) seeking variable chromospheric features on the star at periods related to the planet motion, iii) measuring atmospheric escape. Such modeling can be done on a few optimized systems and then applied systematically on all \amakihi\ planetary systems, as long as sampling and precision are adequate. From the combination of models and observations, \amakihi\ will provide a major breakthrough in the measurement of exoplanetary magnetic fields and stellar wind properties \citep{vidotto2025}.
+
+\textcolor{red}{EXPAND HERE on a stellar study synergy (WP5 versus 6 or 3 versus 5)}\\
+
+In addition and most importantly, the legacy value of the \amakihi\ program will be very large, offering a homogeneous set of high-resolution spectra from 390 to 2450 nm in polarized light for a variety of stars and systems in the solar neighbourhood. Such datasets will provide constraints and feed for thoughts to theoreticians in the fields of spectral synthesis, atomic and molecular physics \citep{crozet2023}, stellar dynamo \citep{zaire2022}, stellar internal mechanisms \citep{jouve2020}, atmospheric dynamics \citep{dhouib2024}...
+
+
+Finally, there will be strong synergies between the proposed programs and the programmatic road-maps in the field of stellar and exoplanet galactic astronomy. For instance, the proposed program will pave the way to future ELT/ANDES  (Palle+2023) by identifying the most nearby systems for close-in characterization, and best prepare the dedicated Ariel mission. In addition, the search for and characterization of nearby systems will provide the targets for future missions like HWO or LIFE. The study of young stellar systems will also come as a necessary complement to Gravity+ dedicated surveys within a joined program \citep{perraut2026, donati2026}.
+
+As for many space missions, a substantial ground-based complementary program allows us to boost the science return of the very large projects of the field. For instance, TESS, PLATO, and Gaia exoplanet discoveries would lack the fundamental knowledge of the planet mass without RV measurements; JWST observations would lack some chemical species and the whole dynamical property of exoplanet atmospheres; black-hole binaries revealed by Gaia will have partial orbital coverage, etc.
+
+The proposed program notoriously serves a wide community of CFHT users, since we joined the stellar, exoplanet, and atmospheric science communities. The galactic astronomy users finally did not join the proposal after a first intention. The core science will be the characterization of stellar/planetary systems across time, with other focused programs of high impact and a long-standing legacy value.
+While aiming at scientific coherence in the proposed program, we gave priority to strategic projects that will respond significantly to the questions listed above and take full advantage of the unique instrumental assets of \wena. We will also include additional projects that benefit from the wide wavelength coverage, leaving out risky or snapshot projects that are better done through PI time. 
+
+\newpage 
+
+
+% idee figure: montrer que toutes les étoiles deja bien observées ont des planetes publiées, donc il faut observer celles peu observées -> combien peut on obtenir de planètes EN PLUS =  manquantes ... histogramme cumulatif de planètes connues en fct dist 1 -10 puis overplot sur hitogramme combien on peut en attendre > 1 masse terrestre (sans forcément prendre limite en VR), -> sortir population stellaire "pas assez suivie" + lui appliquer la stat. NORD et SUD, visée complétude 10 pc
+%..Figure en construction..
+
+\begin{SCfigure}[1][h!]
+    \centering
+    \includegraphics[width=0.5\linewidth]{KirkpatrickCFHTM.png}
+    \caption{The Solar neighbourhood planets have not all been found \textcolor{red}{Placeholder figure to be changed or adapted as needed - DEC more than -20d, from Kirkpatrick2024 \citep{2024ApJS..271...55K}}}
+    \label{fig:fig1}
+\end{SCfigure}
+
+
+\begin{SCfigure}[0.8][h!]
+    \centering
+    \includegraphics[width=0.6\linewidth]{fig1_wp3.png}
+    \caption{Sketch of the magnetospheric accretion/ejection processes of an accreting T Tauri star. The stellar magnetic field truncates the inner part of the protoplanetary disk and channels material from the inner disk through magnetized accretion flows. The material falls onto the photosphere, creating hot spots. The magnetic activity in the outer convective envelope is also at the origin of cool spots. Several types of outflows are observed in these systems: the accretion powered stellar winds, whose temperature and launch processes are currently unknown; the magnetohydrodynamical jets launched through the magnetic interaction of the disk and stellar magnetic fields in the inner part of the disk; and the MHD disk wind launched further away in the disk. A potential planet in the cavity or in the disk may also be present. For each component of the system we detail the wavelength range of emission and the type of spectral features that will be analyzed with \wena\ to constrain the various processes at play (adapted from \citet{Hartmann_Accretion_2016}.}
+    \label{fig:fig1_wp3}
+\end{SCfigure}
+
+\begin{SCfigure}[1][h!]
+    \centering
+    \includegraphics[width=0.45\linewidth]{fig2_wp3.png} \hspace{12pt}
+    \caption{The WP3 sample in the pre-main-sequence HR diagram. PMS evolutionary tracks have been computed using the CESTAM code for different masses from 0.5 to 4 M$_{\odot}$ (black lines). Isochrones from 0.1 to 10 Myr are indicated in blue lines. The tracks evolve from the birthline (red dashed line) to the Zero-Age-Main-Sequence (ZAMS, black dashed line). Each star of the sample is indicated with a colored dot as a function of its mass accretion rate. Stars that are still on the PMS but are not accreting anymore are dark blue. Stars with candidate and confirmed planets are circled in blue. The green and blue lines indicate the limits after which the star is not fully convective and starts to develop a radiative core (green), and after which the convective envelope is less than 2\% of the stellar mass. It is interesting to probe all types of internal structure to better constrain the dynamo processes.}
+    \label{fig:fig2_wp3}
+\end{SCfigure}
+
+
+\begin{SCfigure}[0.6][h!]
+    \centering
+    \includegraphics[width=0.7\linewidth]{cartoon_BfieldTEmission_v2.png}
+    \caption{Research axes of WP4 include 1) using thermal emission of planets at a variety of orbital phases to measure molecular abundances, vertical temperature profiles, and winds, 2) detecting the magnetic field of exoplanets from the polarization of planetary emission, 3) detecting reflected light from planets, and 4) quantifying atmospheric escape and abundances during transit. The fifth research axis consists of monitoring rare events, e.g., transits of long-period planets.}
+    \label{fig:wp4_cartoon}
+\end{SCfigure}
+
+
+\begin{SCfigure}[0.8][h!]
+    \centering
+    \resizebox{0.5\textwidth}{!}{\includegraphics{plot_amkihicmd.pdf}}
+    \hspace{12pt}\caption{The Gaia colour-magnitude diagram of our targets. The purple line is an $\alpha-$enhanced isochrone of 13 Gyr and [Fe/H] = --3.20 from the BaSTI set \citet{pietrinferni_updated_2021}.}
+    \label{fig:cmd_wp6}
+\end{SCfigure}
+
+
+\begin{SCfigure}[0.8][h!]
+    \centering
+    \resizebox{0.4\textwidth}{!}{\includegraphics{GourvesRealisticSPMI.png}} \hspace{12pt}
+    \caption{MHD simulations of star-planet magnetospheric interactions including a planetary magnetic field and an inclined bipolar stellar field. The system configuration is a typical hot-jupiter system as HD 189733 (Gourv\`es et al, in prep).}
+    \label{fig:SPMI}
+\end{SCfigure}
+
+
+\begin{figure}[h!]
+    \centering
+    \resizebox{0.99\textwidth}{!}{\includegraphics{roadmaps.png}} 
+    \caption{The \amakihi\ program in the landscape relevant to the exoplanet and stellar research fields, not mentioning the permanent and ongoing facilities or program, like TESS, ALMA, and JWST.}
+    \label{fig:roadmap}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.495\linewidth]{inj-rec_spirou.pdf}
+    \includegraphics[width=0.495\linewidth]{spirou_03_injrec.pdf}
+    \caption{Detection limits at about 30-day periods -in the habitable zone of nearby M stars, the addition of 15\% measurements obtained at Moon phase less than 0.5 changes the lower detected mass from 9 to 6.5\ME, i.e., a 40\% bonus.  }
+    \label{fig:moonphase}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\linewidth]{AUMIC_Wenaokeao.png}
+%    \includegraphics[width=1\linewidth]{GJ1289_Wenao.png}
+    \caption{Composite spectrum of the nearby, young and cool star AU Mic with a few zoom panels on features of interest for stellar physics, activity diagnostics, and RV content. The format of \wena\ is used here, removing the reddest part of the \esp\ spectrum.   }
+    \label{fig:aumic}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.495\linewidth]{Amakihi_stars.png}
+    \includegraphics[width=0.495\linewidth]{Amakihi_Teff_mH.png}
+    \caption{Left: RA, DEC distribution of \amakihi\ targets, with symbol sizes scaling with the number of iterations. Right: distribution in effective temperature and $H$ band magnitudes. \textcolor{red}{incomplete}}
+    \label{fig:sample}
+\end{figure}
+
+\clearpage
+\section{Technical justification}
+\subsection{General strategy (1 page)}
+% ADD:
+%A discussion of the program's robustness to a reduced data acquisition rate or to evolving instrumental performance
+
+\begin{itemize}
+    \item 
+%The minimum number of hours/nights: XX hours or YY nights\\
+The total number of hours/nights, requested: XX hours or YY nights
+    \item 
+The survey will be composed of 1 to 200 visits of several hundred stars spread over 6 years. While several components correspond to monitoring cadences (approximate daily cadences in various lengths), others typically require time-critical half-night time windows, and a third type is composed of snapshot visits. Brighter objects that can afford irregular time sampling and need long-term follow-up monitoring will be used as fillers in any conditions.
+Each WP has defined a stellar sample and a number of visits or hours per target. This is by essence flexible. Some WP will prefer reducing the number of stars and others, reducing the number of visits per star. Reducing the number of stars evidently limits the scientific outcome of the programs. \\
+For all visits, a combined \spi\ and \esp\ ETC was used, counting overheads of 35\,s per visit for the default spectropolarimetric mode. The number of visits takes into account the type of search : for instance, blind exoplanet search requires more than 200 visits due to multiple systems (Diaz+20XX) while transiting or astrometric follow-up observations for which some orbital parameters are constrained require much less. For each star, the exposure time is driven by the goal S/N in either \esp\ or \spi\ wavelength range. Except limited cases, we will observe in the spectropolarimetric Stokes $V$ mode. The exceptions will use spectroscopic mode (some of WP4) or linear Stokes $Q$ and $U$ (some of WP5). The SNR mode is used except in sequences where regular sampling is required (fast rotating / pulsating stars, or atmospheric sequences).
+    \item 
+Targets were selected for their science interest, a declination Northern than -47$^{\circ}$, magnitudes up to 18 (14) in $V$ (respectively, in $H$). Most stars have combined campaigns of observations with other facilities, including TESS, Gaia, Gravity+, ALMA, SPHERE to supplement the \amakihi\ observations. We anticipate we may have to limit the declinations, depending on the measured performance of \wena\ at large telescope inclinations.
+%The criteria used to select the fields or targets, including but not limited to, declination (which impacts observability window and Image Quality), magnitude of the targets, scientific value of the fields or targets, and existing data that will be used to supplement the CS observations.
+    \item 
+Instrumental setups: we will use \wena\ in mode 3 (simultaneous usage of \esp\ and \spi). The driving instrument for the exposure time will depend on the observed star and the expected outcome. Polarimetric mode will be preferred in general, for the legacy value and data homogeneity, except for exoplanet’s atmospheric observations. In rare occasions, \esp\ alone may be used, for instance, to avoid saturation occurring on the \spi\ detector and having long-lasting persistence impacts.
+All observations can be carried from 8$^\circ$ twilights and in any Moon phase. The variety of the stellar samples and scientific goals allows observing in all kinds of conditions (extinction up to 1 mag, seeing, water content) as long as guiding remains possible. It is extremely valuable to have access to some nights where Moon phase is smaller than 0.5. We give three examples: 1) rare events of high scientific award (WP4); 2) increase access to the Southern PLATO field between October and March (WP2, 5); 3) access to the habitable zone of nearby stars, where planets will have orbital periods of about 30 days (WP1). The impact for the third configuration is illustrated in Figure \ref{fig:moonphase} with simulations based on \spi\ data \citep{charpentier2026}: the addition of 15\% measurements with Moon phases less than 0.5 increases the mass limit by 40\% in the habitable zone of a nearby star.
+%The justification for \wena\ observations that deviate from the standard operations between the 8-degree twilights and any additional constraints (e.g., a minimum number of consecutive exposures). Proposals should either mention for how the time between 8 degree and 18 degree twilight will be used, or provide a clear justification if this interval will not be used.
+A table estimating the number of hours requested per RA bin and per WP is given in Table \ref{tab:RA} with 4-h intervals. The interval 4-8h corresponds to the Taurus region and part of the PLATO Southern field. The time request is larger. It corresponds to 40 full nights per B semesters. Figure \ref{fig:sample} shows the distribution of the full sample of stars in various parameters (position, temperature and brightness).
+    \item 
+Snapshot program: we have an extended list of bright stars for which bad atmospheric conditions ($>$1 mag) can be used. TO BE COMPLETED
+%The percentage of observations that can be taken under Snapshot conditions (IQ $>$ 1.2" and/or extinction $>$0.5 mag for MegaCam, $>$1 mag for \wena). Snapshot observations do not count toward the allocation and are effectively free.
+    \item
+ There are three types of scheduling constraints: i) one polarimetric sequence per available night (or less) during one or several observing seasons, for exoplanet detection and magnetic field characterization (WP 1, 2, 3, 5); ii) a continuous sequence of 2 to 6 hours duration at precise epochs for the atmosphere of exoplanets (WP 4); iii) snapshots or less frequent/less regular visits (WP5, 6)
+ \item
+ All exposure times were calculated using the \esp\ and \spi\ ETCs. For each star, we decided which instrument is driving the total exposure time and what S/N were obtained at 1650 and 598 nm.
+
+
+%If time is not spread evenly across semesters, a table showing the estimated number of hours requested per semester.
+%For exoplanet science that requires time-constrained observations (e.g., transits, eclipses, quadratures), an estimate of the number of time-constrained observations per year must be given together with the likelihood of completion based on weather statistics and bright/dark time available.
+%Proposals performing monitoring should provide (1) an estimate of the number of iterations requested per semester and in total, (2) the cadence (period) of the observations, and (3) any other monitoring constraints.
+%Any program with scheduling constraints should explicitly state (1) if there is a desired minimum length for the observing runs; (2) if there is a need to have observations on consecutive nights; (3) if there is a need for observations to be taken over more than 2 consecutive hours (e.g. for transits); (4) if there is a need for a moon phase not normally scheduled for the required instrument (e.g., for observations at a given date where the instrument would not normally be available because of the Moon phase.)
+\end{itemize}
+
+\begin{table}[b]
+    \centering
+    \begin{tabular}{c|cccccc|cc|l}
+            & 0-4h & 4-8h & 8-12h & 12-16h & 16-20h & 20-24h & Total A & Total B & Total (h) \\\hline
+        WP1 & 49   & 157  & 247   &  96    & 162    & 83     & 505 & 289 & 793     \\
+        WP2 &  148 &  144 & 139   &  24    &  52    &  101   & 215 & 393 &  609 \\
+        WP3 & 0    & 632  &  58   &  419   &  284   & 74     & 760 & 707 &  1467 \\
+        WP4 & 0    &   0  &   0   & 170    &  46    & 241    & 242 & 216 & 457  \\
+        WP5 & 118  &  765 &  44   & 16     & 64     & 99     & 125 & 983 & 1107 \\
+        WP6 & 120  &  3   &  71   & 95     & 81     &  135   & 247 & 260 & 506  \\\hline
+        All & 435  &  1702&  559  & 820    & 689    & 735   & 2068 & 2873 & 4941  \\
+    \end{tabular}
+    \caption{Distribution of observations (hours per year) across semesters \textcolor{red}{all numbers are to be confirmed}}
+    \label{tab:RA}
+\end{table}
+
+
+\newpage
+\subsection{WP1: Nearby exoplanets}
+The stellar sample of nearby low-mass stars has been built from several sources: i) the census of stellar populations below 10 pc \citep{reyle_10_2021}, ii) the list of stars already observed in the past \spi\ Large Programs, iii) the projection of Gaia DR4. When relevant, an equatorial declination range is preferred ($-25^\circ < \rm DEC < +25^\circ$) to open possibilities for future E-ELT observations. Ten Gaia targets will be identified and selected in early 2027.
+
+The goal SNR per visit ensures the velocimetric precision that is needed to detect exoplanetary signatures at the level of 1-2\,m/s with SPIRou, as proven by experience in the SLS, SPICE, and PLANETS past programs \citep{moutou_characterizing_2023, ouldelhkim2026}. This is also dependent on the number of visits \citep{carmona2025} as multiple systems are the norm rather than the exception. Detection limits strongly depend on the sampling, as illustrated for instance in Figure \ref{fig:moonphase}. The SNR driver is \spi\ for the low-mass stars selected in this WP; the SNR obtained with \esp\ is lower but sufficient for monitoring the chromospheric emission lines, especially H$\alpha$ and the CaII triplet.
+
+Each visit consists of a spectropolarimetric sequence in Stokes V, in order to get simultaneous measurement of the stellar magnetic field, for a full characterization of the system. Although the selected stars are usually quiet, they may host a strong magnetic field as revealed by \citet{lehmann2024}; this is also expected for the few K dwarf stars included in the sample.
+
+\textcolor{red}{needs more on time justification and priorities}
+
+\subsection{WP2: Planetary interiors}
+\textcolor{red}{Sample description, SNR goals, observing strategy, per sub-sample}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.45\linewidth]{SPIRou_RV.pdf}
+    \caption{ \textcolor{red}{To be completed}}
+    \label{fig:sample}
+\end{figure}
+
+
+\subsection{WP3: Young magnetic stars}
+We will focus on low- and intermediate-mass PMS stars still feeding from their accretion disks and simultaneously exploit their optical and near IR spectra to retrieve their large-scale magnetic topologies with Zeeman-Doppler imaging (ZDI), to characterize their magnetosphere, and to investigate the medium-term (days to weeks and months) and long-term (years) variability of the large-scale field and accretion pattern.  At the same time, we will monitor their RVs, looking for potential signals from close-in planets, once the magnetic activity jitter is filtered out \citep[as in, e,g.,][]{Zaire2024}.  We will investigate in particular how the magnetic and accretion properties vary with stellar parameters, i.e., masses (in the range 0.3-4~\MS), ages (0.5-20\,Myr), and accretion rates (0.001-10$\times10^{-8}$\,\MS/yr).  Our set of 26 targets will provide minimal sampling of the 3-parameter space.  To optimize the sample, we chose targets previously observed with a high-resolution spectropolarimeter (either \esp\ or \spi\ at CFHT, or HARPSpol at the ESO 3.6m telescope) to ensure that their magnetic fields are detectable and suitable for ZDI.  
+% We also want to well sample the parameters that influence the dynamo processes, the magnetic star-disk interaction, and the disk and planet evolution. 
+
+Reaching our goals requires a dense monitoring of all targets in three different seasons during the 12 semesters of \amakihi, with typically 40 visits per season per target for a total of 120 visits per target.  This will allow us to diagnose changes in the magnetic topology and in the accretion pattern, and to estimate (or derive an upper limit on) the mass of potential close-in planets that may orbit within the inner accretion disks of our PMS targets \citep[as in, e.g.,][]{Donati2026}.  More specifically, we will reconstruct for each season (or sub-season) the large-scale magnetic topologies as well as surface maps of brightness and accretion features of our targets from simultaneous sets of \spi\ and \esp\ spectra \citep[see][]{Donati2024b}, and estimate the small-scale field from the differential Zeeman broadening over the wide spectral domain \citep{Cristofari2025}.  From the reconstructed magnetic topologies and their long-term temporal evolution, we will provide new constraints on the underlying parent dynamo processes and investigate whether these magnetic fluctuations are related to changes in the accretion patterns \citep{Cody_Continuum_2017}.  Our sample contains three PMS stars with known transiting planets (IRAS04125+2902, V1298~Tau and AU~Mic, with ages of about 2, 10, and 20~Myr, respectively), two PMS stars with known outer planets (PDS~70 and TWA~7, aged about 6 and 10~Myr) plus a few PMS stars with candidate close-in planets \citep[e.g.,][]{Zaire2024}.  RV series of all targets will be analyzed with Gaussian process regression and Markov chain Monte Carlo processes to optimally filter out activity jitter and characterize potential signatures from close-in planets \citep{Zaire2024}, reaching upper limits of the order of 1~\MJ\ depending on the RV precision achieved.  
+
+%To optimize the increase our chances of planet detection, and better sample the changes of magnetic topologies, potentially detecting cycles, we have limited the sample to T Tauri stars of low- and intermediate-mass that have been already monitored at least once before with a high-resolution spectropolarimeter (\esp, \spi\ or HARPSpol/ESO-3.6m), allowing to have at least one magnetic map in the past. This strategy has been chosen to ensure first that magnetic fields are well detected, and can be modeled with ZDI. Secondly, it will allow us to study the various variabilities observed in such young systems on a long time-scale: accretion processes, magnetic fields, spots coverage. Recurrent observations over a long-timescale helps also in detecting small radial velocity variations due to the reflex motion induced by a small companion. By restricting the sample to those already observed in spectropolarimetry allows us to maximize our chances to fulfill our scientific objectives.
+
+%The spectra of these young objects are highly variable due to a combination of phenomena: the stellar rotation, the inner disk instability and reconnection events in the magnetosphere, both inducing stochastic accretion processes, inducing themselves stochastic accretion-powered stellar winds. All of these are observable on day timescale. On a longer time-scale (months), the dynamo processes in the convective envelope modify the topology and strength of the magnetic field, and the spot coverage. Finally, radial velocity motions of close-in planets can also be detected on weeks to month timescales, depending on their distance to the star. One open question we need to address is how such planets affect the accretion processes and whether they are detectable in the spectra by modifying, e.g., the spectral variability. All of these processes are detectable in the \esp\ and \spi\ spectra at the same time, thanks to the spectral features detailed in the scientific justification. As demonstrated in the past, to fully characterise the star, its magnetic field, its magnetosphere, and accretion processes, we need a series of at least 40 visits over several months (one season). This is mandatory to disentangle the periodic rotational, and reflex motion effects, from the other stochastic processes linked to dynamo and accretion. While such an analysis has been performed for only a few number of stars (3? 4? JF ?) of approximately the same mass (0.5 to 0.8 M$_\odot$), we propose to perform it on a large number of young stars spread over the HR diagram for different accretion processes. This is mandatory to guide the theory of magnetospheric accretion processes, and understand in particular how it changes with the mass, mass accretion rate and strength of the magnetic fields. We will also be able to attempt the detection of close-in massive planets and put limits on the detection (JF can we give some estimate on the limits in mass based on what has been done with \spi\ ?), which is of high interest for understanding the planet formation at such a young age (see Fig.~\ref{fig2_wp3}). We emphasize that such limits can only be obtained if we have enough data taken over one season from which we can disentangle the various origin of the observed variability.
+%Finally, we want, for the first time in young stars, study the long-term evolution of the magnetic fields, and especially detect the presence of cycles. Are magnetic fields strongly changing on years or decades ? Do they show cycles ? Are they short as observed in some cool stars (REF), are they long as in our Sun ? How these magnetic variation affect the accretion and outflow processes ? To address these questions, we need to repeat the series of 40 observations over several years. To explore the short-term variations we propose to obtain three series spread over the 6 years of the community survey. As we will not be able to observe all our targets the same year, this will allow us to probe 4-5-year timescale. When combining with the observations obtained in the past we will be able to probe time scales from 10 to 24\,years depending on the stars.
+
+ PMS targets are subject to intense stochastic variability driven by the accretion process, leading to veiled spectra (with weaker absorption lines) and frequent flaring.  We must thus ensure that high-enough quality spectra are collected at all times.  Previous observations with \spi\ and \esp\ large programs demonstrated that typical SNRs of 200 per pixel (in one Stokes $V$ polarimetric sequence), either with \spi\ in the H band for targets with $T_{\rm eff}<4500$~K or with \esp\ in the V band for the others, are required for this purpose.  For the few faintest targets (such as IRAS04125+2902), we limited the exposure time per sequence to 4$\times$10~min, yielding smaller SNRs per polarization sequence (down to 140) and less precise magnetic topologies \citep[though still detectable as demonstrated with previous observations, e.g.,][]{Donati2025}.  The quoted exposure times correspond to those already used in previous observations with \spi\ and \esp\ and were double checked with the ETCs of both instruments.  
+
+Our survey is divided into three main priority subprograms: (i) the top priority core program includes 14 stars, for which we will carry out 90 visits per target, for a total of 82 CFHT nights; (ii) the second priority program in which we will collect the remaining 30 visits for the 14 stars mentioned previously, and the whole set of 120 visits for a complementary sample of 8 stars, for a total of another 82 CFHT nights; (iii) a third priority program dedicated to the 120 visits of the remaining 4 targets, for a total of 25 CFHT nights.  The core top priority program ensures in particular that the bulk of observations is collected for about half the targets, but with limited conclusions on the science goals as a result of the reduced allocation and the smaller sample.  Adding the second priority program ensures that most of the science conclusions will be reached, except for a few remaining targets.  Carrying out the full program will ensure that the observed targets are more evenly spread over the selected region of the HR diagram and provide an improved sampling of our 3-parameter space; it will also provide data for the two PMS stars with known distant planets (TWA~7 and PDS~70), thereby yielding key info about the architecture of planetary systems of stars known to possess outer planets in their (accretion or debris) disks.  
+
+RV studies will be carried out in synergy with WP1, ZDI reconstructions in synergy with WP5, while activity studies for stars with transiting planets can also be exploited by WP2 and WP4.  Last but not least, we will benefit from coordinated observations with GRAVITY+ whenever possible to monitor, and further constrain the geometry of accretion funnels and the inner rim of accretion disks using interferometry \citep[e.g.,][]{Gravity2020,perraut2026}.
+
+%In order to keep the total requested time to a reasonable number, while still getting a reasonable coverage of all the parameters we need to probe (mass, accretion rate, magnetic strength and topology, planet candidates), we have limited the time for one V sequence to a maximum of 50\,mn. Our final sample contains 27 targets, including 5 planet candidates. To obtain 120 observations per star we need a total of 222 nights. We propose to divide this sample in three priorities. The first priority is to get at least 2 series of 40 observations separated by few years for 14 accreting stars. This sample will allow us to reach most of the scientific objectives, especially those concerning the accretion processes, and the magnetic field variability. If some magnetic fields have short-term cycles, we will not be able to detect them as we need not be able to observe a full cycle with only 2 seasons. With only the P1 sample we will not be able either to confirm the planet candidates, and to explore the effect of accretion on the magnetic field variations, as we will not have a control non-accreting sample. With only the P1 we will also only have one star to probe one triple of the parameter space (mass, accretion rate, Bfield). The P1 sample require ?? nights. As a second priority we propose to add 8 accreting stars to the P1 sample, allowing us to better probe the parameter space. We also propose to get one more season for the P1 targets, and 2 seasons for the P2 targets. The P2 sample requires ?? additional nights. In the P3 sample we propose the planet candidate stars, and few non-accreting stars. The P3 sample requires ?? additional nights.
+
+
+\subsection{WP4: Exoplanetary atmospheres}
+
+As explained in the science justification, we have 4 sub objectives in WP4: (1) 3D characterisation of golden hot Jupiters, (2) magnetic field detection, (3) atmospheric escape,(4) reflection spectroscopy and (5) targets of opportunity. 
+Our target list has then been defined per objective:
+\begin{itemize}
+    \item {\bf Objective 1:} we first calculated an emission spectroscopy score and a transmission spectroscopy score inspired from previous works and our past allocations, and chose planets which atmosphere can be characterized in a few observations at most. In PLANETS, we restricted to 6 targets, and aimed for two more in 'Amakihi. We took into account the fact that we need a SNR per exposure > 100 to get good quality data, and the need that the planet must move by less than a few \kms\ during the exposure time (this "smearing" effect can be very large for short orbit planet and hinders atmospheric detection).  Finally, the time of observation takes into account the need for long baselines in transit and eclipse observations to correct properly for stellar contamination.
+
+    \item {\bf Objective 2:} This objective is much more exploratory, and defining a target list is by essence more speculative. Our first hint at an exoplanet magnetic field was obtained during transit. We therefore selected planets that have either very favourable transit conditions and/or orbit around a very quiet star in Stokes V, so that any circular polarization during transit would be of planetary origin. We will also observe all of the transits of the targets of Objective 1 in polarimetry in order to increase our chances of detection, aiming in the long term for magnetic statistics.
+
+    \item {\bf Objective 3:} Our third objective is split into two parts: long-term monitoring and exploration of the physical extent of helium outflow. For the first part, we selected the three best targets that are known to have measured variability in their helium triplet. Our goal is to study how this variability changes over time. For the second part, HAT-P-32 b and HAT-P-67 b are known to have helium outflows extending far beyond transit from partial phase curves from the pairing of HET/HPF observations from nights covering multiple months. Our observations will first aim to confirm the physical extent of the outflows beyond transit and then to refine their accurate shape by gathering a full phase curve. WASP-12 b and WASP-107 b were selected as they exhibit clear evidence of pre- and post-transit observations from short baseline observations. Therefore, they are the best targets to explore how far their helium outflow extends.
+
+    \item {\bf Objective 4:} Our reflection spectroscopy targets are defined as (i) planets with good emission score in the infrared and (ii) big planets, close enough to their star to ensure a planet-to-star flux ratio of TO BE DEFINED in the visible assuming an albedo of TO BE DEFINED. This number has been estimated from the limit to which we are able to detect planets in emission spectroscopy. As an exploratory objective, we will adapt our target list depending on our results during the proposal.
+
+    \item {\bf Objective 5:} we here selected planets with very rare occurences of observation but very high conditions for characterisation of their atmosphere based on their transmission or emission spectroscopy scores. This encompasses long period planets (HIP 41378 f and HD 80606 b) and young planets (AU mic b/c,V1298 Tau b/c). These targets will be complemented by planets discovered during the six years of this large program. 
+
+\end{itemize}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{lcc}
+           Target name & Objective & Total nights of observation\\\hline
+        HD 189733 b& 1,2,3,4 & 12\\
+        HD 209458 b& 1,2,3,4 & 8 \\
+        \hline
+    \end{tabular}
+    \caption{Target list of WP4 for each sub objective}
+    \label{tab:WP4}
+\end{table}
+
+
+The observations of WP4 are all time constrained as we are aiming for specific phases of the orbit for our observations. For the targets of opportunity, which have rare availability, we have defined all of the windows over the full proposal. For the other targets, we can adapt each semester depending on what has been observed beforehand. 
+
+In terms of analysis tools, for objectives 1, 4 and 5 we will rely on both the work develop by the French team through the ATMOSPHERIX consortium (Klein et al. 2024) and the work of the Canadian team with the Starship code (REF ?). With our past years of collaboration, we have already verified that our code, although independent, brings consistent results and can therefore be used jointly to confirm complicated detection. For objective 2, R. Allart and A. Masson (both members of the proposal) are world-renowned experts in the escape using the He triplet in the infrared, and J. Seidel is an expert for the study of extended atmosphere in the visible, and we therefore have all the necessary skills in the team. Finally, objective 2 is a combination of polarimetry (with many experts in our team such as J.-F. Donati, A. Lavail, P. Petit) and transit spectroscopy which is our major expertise. All in all, we are perfectly ready for the challenge of data reduction of our 5 identified objectives.
+
+
+\subsection{WP5: Stellar magnetism across the HR diagram}
+\textcolor{red}{Sample description, SNR goals, observing strategy, per sub-sample}
+
+
+\subsection{WP6: Galactic archeology}
+
+Our sample has been extracted from the Pristine data release 1 
+\citep{martin_pristine_2024} for the dwarf star sample and from the
+WEAVE Galactic Archaeology input for the giants stars. For the giants we selected targets from the bright star sample that uses the photometric
+metallicity derived using the calibration of \citet{bonifacio_pristine_2019},
+which makes use also of the Gaia parallaxes.
+Several of these targets will have to be substituted by others, in the course
+of the six year survey as new, and possibly better candidates become available
+from several sources: Pristine data release 2, WEAVE Survey (both high and low resolution), Gaia data release 4 and PLATO. The magnitude range of the new candidates will be the same as that of the current sample. Furthermore, once the RA distribution of the targets of the other surveys is fixed, we can use the Pristine data release 2, as well as the synthetic Pristine-Gaia catalogue\footnote{This catalogue is obtained by computing synthetic Pristine photometry from the Gaia BP prism spectra.} to  adjust our input catalogue in order  to fill in any  RA ranges that are underpopulated in the  in the rest of the survey.
+
+Our main purpose is to provide a detailed chemical inventory for the metal-poor end of the metallicity distribution function of the Galactic halo. Our sample comprises 320 stars of which 86 giants, the others are dwarfs or Turn-Off, hereafter simply called ``dwarfs'' for concision. 
+We chose the
+magnitude range of the targets doing a trade-off between a number of stars that
+constitutes a statistically significant sample and a S/N ratio that allows a
+chemical inventory for about 15 chemical elements for dwarf stars and over 30 for giant stars. 
+To obtain these results we fixed the total exposure time such that for the dwarf stars S/N=100 at 404\,nm and S/N=67 at 404\,nm  for giants. These requests come from our previous experience in the analysis of metal poor stars \citep[see e.g.][]{bonifacio_topos_2018,francois_detailed_2020}. The lower S/N for the giants can be explained by their cooler effective temperatures, hence stronger absorption lines. For both dwarfs and giants the blue spectral range is crucial for the chemical inventory, for this reason it drives the exposure time requested. At the same time in the IR, with \spi, we shall obtain high enough S/N ratios to allow a robust determination of the abundances of CNO elements, as well as S and Sr. For some of the giant stars it may be possible also to determine the F abundance from the HF lines in the K band. In order to keep the total exposure time within something of the order of 500 hours we cut the magnitude limit such that no star requires more than 3\,h of total exposure (overheads included). 
+
+For the dwarf stars we selected only stars that have a photometric metallicity estimate [Fe/H]$\le -3.0$ and we excluded all stars that are suspected variables \cite[see][]{martin_pristine_2024}. In any apparent magnitude bin, the giant stars, are less   numerous than Turn-Off and dwarf stars due to the shorter 
+time spent by the stars in the RGB phase than in the MS or Turn-Off stage. 
+For this reason in order to obtain a large enough sample of giants, without
+going to fainter magnitudes we required that the photometric metallicity estimate is $\le -2.0$, this choice has the further advantage that we can
+follow the chemical evolution over a span of two orders of magnitude in metallicity. The fact that we relaxed the metallicity constraints for giants, rather than dwarfs, is also driven by the fact that giants afford a more complete chemical inventory. All the target stars are either unknown to SIMBAD or have at most two bibliographical references. This guarantees that none of our proposed targets has been extensively analyzed before.
+
+Our observations shall be formed in spectroscopic mode. Most of the targeted lines in the infrared lie in spectral regions that are relatively clean of telluric absorptions as well as emissions. The precision-radial-velocity requirements of data products processed by \texttt{APERO} (telluric correction, sky emission, wavelength-calibrated) are more than sufficient to meet our science goals.  % We believe we can correct for the absorption lines by using the TAPAS synthetic spectra of the Earth's atmosphere \citep{lallement_transmission_2025} and we thus do not need observations of fast rotators. 
+
+
+
+\subsection{Project Management plan}
+The \amakihi\ survey is being proposed by the \esp\ and \spi\ communities from France and Canada, with the collaboration of some additional members from other countries. The survey team will be managed by a steering committee that includes WP leaders with diverse scientific expertise and representatives of participating agencies, plus a representative from CFHT. Each WP has the responsibility to define the exact science objectives, the target sample, the observation strategy, the data analysis route, data analysis management, and reporting to the steering committee. Each team also has to contribute to the survey operations in support of the CFHT observatory (see below). During the project, we will set up regular video-conferences per WP and for the steering committee. We will also organize yearly workshops, open to the full scientific community, that will be held alternatively in France and Canada, with the possibility to participate online.\\
+\textcolor{red}{A fraction of time each semester devoted to an internal open call, especially for young researchers of the team and/or in coordination with local Hawaiian students (1 night per semester and to be adjusted if successful)}
+
+% =====================================================================
+% Full replacement for the section block starting at
+%   \subsection{Data Management plan}
+% and ending just before \newpage in main.tex.
+% =====================================================================
+% =====================================================================
+% Full replacement for the section block starting at
+%   \subsection{Data Management plan}
+% and ending just before \newpage in main.tex.
+% =====================================================================
+
+\subsection{Data Management plan}
+
+The science team brings direct, hands-on experience in managing large-scale, long-baseline spectroscopic datasets. We have led the SLS and SPICE large programs with \spi, and team members have contributed to the NIRPS guaranteed time observations (GTO) and to the scheduling and data management of extensive HARPS pRV campaigns. Collectively, these represent a data volume and operational complexity comparable to the full \amakihi\ survey, and we consider this operational experience directly relevant.
+
+A specific challenge in pRV programs is the sensitivity of the radial-velocity time series themselves: releasing individual epochs before the end of monitoring risks pre-empting the science that justifies the proprietary period. Distribution of the RV series will therefore follow the standard CFHT proprietary-period policy, adapted to the duration of each work package. At the same time, a number of intermediate data products that are valuable for entirely independent science cases --- stellar spectral templates, broadband spectral energy distributions, and line-profile diagnostics --- can and will be distributed progressively and independently of any embargo on the RV data. Our team is well aware of these challenges and trade-offs. Data reduced with \texttt{APERO} \citep{cook_apero_2022} will be publicly distributed through CADC, while the APERO Reduction Interface (ARI) provides an internal channel for intermediate data products, with release timelines decoupled from the RV proprietary period.
+
+Beyond these standard deliverables, we are actively seeking funding from the Canadian Foundation for Innovation (CFI) to support one dedicated position over the full duration of the \amakihi\ project. This position would focus on the preparation of advanced data products that improve the long-term scientific return of the survey. One concrete example would be a homogeneous spectral atlas of pRV targets, providing a self-consistent archive for chemical abundances, stellar atmospheric parameters, and line-profile variability across a large, uniformly reduced sample of nearby stars. Such an atlas could naturally extend to a revisit of all existing \spi\ data, including the more than 300 targets observed as part of the SLS \citep{fouque_spirou_2023}, building a community-accessible legacy archive.
+
+\subsection{Support to CFHT operations}
+
+\subsubsection{Team expertise}
+
+The team has been centrally involved in the development of modern high-resolution stellar spectropolarimetry and near-infrared precision radial velocimetry. On the \spi\ side, the team has built and maintained \texttt{APERO} \citep{cook_apero_2022}, the official data reduction pipeline, since first light in 2018. \texttt{APERO} handles the full reduction chain from raw detector frames through wavelength calibration, blaze correction, telluric correction, and polarimetry, delivering extracted 1D and 2D spectra as well as precision radial velocities at the $\sim$2\,\ms\ level. Development of \texttt{APERO} will continue throughout the \amakihi\ survey, with ongoing contributions from UdeM, IRAP, IPAG, and LNA. On the spectropolarimetric side, J.-F. Donati is a key contributor and is the originator of Least-Squares Deconvolution (LSD), the technique used for virtually all stellar magnetic field measurements over the past three decades \citep{donati_spectropolarimetric_1997}, and of Zeeman-Doppler Imaging (ZDI), the tomographic mapping technique behind large-scale magnetic topology studies across the HR diagram \citep{donati_large-scale_2008}. The \wena\ instrument \esp\ emerged from this group, and the official data reduction pipeline Libre-Esprit was designed and is maintained by the same team.
+
+On the radial velocity front, the team has developed several analysis methods that are now standard in near-infrared precision spectroscopy. The line-by-line (LBL) velocity framework \citep{artigau_line-by-line_2022} delivers outlier-resistant per-line velocities that simultaneously diagnose stellar activity and has become a widely adopted community reference. The differential temperature ($dTemp$) method \citep{artigau_measuring_2024} achieves sub-Kelvin measurements of stellar temperature variations from high-resolution spectra, providing an independent handle on astrophysical noise. The WAPITI principal-component framework \citep{ould-elhkim_wapiti_2023} is one approach for posterior correction of residual telluric and instrumental systematics in RV time series after the \texttt{APERO} reduction, and has been explored for challenging telluric-contaminated cases \citep{ouldelhkim2026}. The chromaticity of stellar activity --- characterized via anti-correlated families of spectral lines used as variability indices --- has been measured and exploited for M dwarfs with \spi\ \citep{larue2025}, providing a methodological foundation for disentangling activity and planetary signals.
+
+Our team has been the first to consistently report metre-per-second precision planetary detections in the near-infrared, across multiple systems and multiple programs \citep{cadieux_toi-1452_2022, martioli_toi-1759_2022, moutou2024, carmona2025, cortes2025, ouldelhkim2026, charpentier2026}. These detections span a wide range of host-star types and orbital configurations, demonstrating the maturity and reproducibility of the \spi\ precision-RV approach developed by our group.
+
+PIs of previous Large Programs with \esp\ or \spi\ (MiMeS, MaPP, BinaMIcS, MaTYSSE, SLS, SPICE, PLANETS) are members of the team.
+
+The allocation of human resources for operational support tasks over 2027--2031 will be refined as recruitment and nationally funded positions are confirmed.
+
+\subsubsection{Scheduling}
+
+The team will maintain regular contact with the local CFHT team and will help develop adapted tools for efficient queue-service scheduling. A visitor program to assist QSO coordination of \wena\ nights is envisaged pending adequate budget. Automatic monitoring tools will be developed to track the balance between survey components and to assess conditions, signal-to-noise ratios, cadence sampling, and other quality parameters, with regular reporting to the observatory.
+
+\subsubsection{Pipelines}
+
+
+% Original text from ms.tex
+% \spi\ pipeline optimizations, updates, and testing have been managed by part of this team since 2018 (principally at UdeM, IRAP, IPAG, and LNA). Planned improvements for \wena\ include the implementation of line-by-line RV extraction and enhanced telluric calibration for \esp\ (building on \citealt{artigau_line-by-line_2022}), and homogeneous spectropolarimetric processing and distribution via PolarBase, which already archives \esp\ and \spi\ data.
+
+The team has direct, long-term experience in the development, validation, and operation of the reduction and analysis pipelines required for \wena. On the \spi\ side, \texttt{APERO} \citep{cook_apero_2022} has been built and maintained by members of the collaboration since first light in 2018, with contributions led principally from UdeM, IRAP, IPAG, and LNA. \texttt{APERO} handles the full reduction chain from raw detector frames to extracted spectra, wavelength calibration, blaze correction, telluric correction, polarimetric products, and precision-RV measurements, and it will remain the backbone of the \spi\ data flow throughout \amakihi.
+
+For \wena, we will extend this expertise to a homogeneous processing framework across \spi\ and \esp. Priority developments include the adaptation and continued improvement of the \esp\ reduction for the \wena\ observing mode, the implementation of line-by-line RV extraction on \esp\ data and on joint time-series products \citep{artigau_line-by-line_2022}, and improved telluric handling over the full spectral range. These core reductions will be complemented by advanced analysis layers already developed within the team, including $dTemp$ for tracing subtle stellar-temperature variations \citep{artigau_measuring_2024}, WAPITI for posterior mitigation of residual telluric and instrumental systematics in RV time series \citep{ould-elhkim_wapiti_2023}, and chromatic activity diagnostics tailored to disentangle stellar variability from planetary signals \citep{larue2025}.
+
+The same effort will ensure homogeneous spectropolarimetric products across the survey. Least-Squares Deconvolution and related magnetic diagnostics will be produced within the established \esp/\spi\ analysis ecosystem, and the resulting reduced and value-added products will be distributed through channels already familiar to the community: science-ready reduced data through CADC and spectropolarimetric products through PolarBase, which already archives \esp\ and \spi\ observations. In this way, the pipeline strategy for \amakihi\ is not a speculative development but a continuation and consolidation of tools that have already delivered mature science results on both the RV and spectropolarimetric fronts.
+
+
+\subsubsection{Monitoring instrument performance}
+
+The Universit\'e de Montr\'eal group has developed and sustained a strong expertise in monitoring \spi\ data quality and science readiness since the instrument's first light. This work has included systematic checks of the RV zero-point, detector drifts, wavelength-solution stability, flux sensitivity, and the overall integrity of calibration sequences, and it has directly informed several calibration-strategy updates implemented in \texttt{APERO} \citep{cook_apero_2022}.
+
+For \amakihi, we will extend and formalize this effort through the \texttt{APERO} Reduction Interface (ARI), a web-based dashboard that provides rapid access to quality metrics, observation summaries, and contextual diagnostics for each visit. ARI will allow the team and CFHT staff to track both engineering-level and science-level indicators in a homogeneous framework, helping to identify trends, diagnose issues early, and document the long-term behavior of the instrument.
+
+At the engineering level, ARI will monitor the main quality-control quantities delivered by the reduction chain, including image-shape diagnostics, drift measurements, cavity behavior, and wavelength-solution centroids. At the science level, it will track quantities such as signal-to-noise ratio, barycentric velocity coverage, telluric indicators, saturation flags, readout noise, reduction version, processing date, calibration age, and the status of LBL and CCF products. The interface will also provide direct access to reduced data products and to reduction logs, allowing users to identify what was processed, what failed, and under which calibration context.
+
+This monitoring framework is intended both as an internal operational tool and as a community-facing resource. In practice, it will support night-to-night assessment of instrument health, rapid validation of newly acquired observations, and long-term cross-checks of the stability required for precision-RV science. By consolidating these diagnostics in a single interface, ARI will strengthen the reproducibility of the reductions, improve responsiveness to instrumental or environmental anomalies, and help ensure that the data delivered by \wena\ remain uniformly science-ready throughout the survey.
+
+
+%The UdeM group has developed and sustained an expertise in monitoring \spi\ data quality and science-readiness since the instrument's first light. This effort has produced systematic checks of the RV zero-point, detector drift, wavelength solution stability, and flux sensitivity, and has driven several calibration-strategy iterations embedded in \texttt{APERO} \citep{cook_apero_2022}. For \amakihi, we will extend and formalize this activity through the APERO Reduction Interface (ARI), a web-based dashboard providing real-time access to quality metrics, observation summaries, and contextual diagnostics for each visit. ARI is under continuous development and will be made broadly accessible to the community. % [screenshot here?]
+
+%{\color{red}
+
+%\noindent APERO reduction interface (ARI) features
+
+%\begin{itemize}
+%    \item Monitoring of quality control (shape [dx,dy,A,B,C,D], wave [drift, cavity, wave centroid])
+%    \item Monitoring of science targets (SNR, BERV coverage, LBL and CCF, telluric monitoring, saturation, readout noise, version and processing date, calibration time)
+%    \item Access to all reduced data
+%    \item Monitoring APERO reductions (what was run, what failed)
+%    
+%\end{itemize}
+
+%}
+
+
+\subsubsection{Development and access to added value products}
+
+Science-ready reduced data and associated metadata will be distributed through the Canadian Astronomy Data Centre (CADC) within the \texttt{APERO} framework. Spectropolarimetric data will be deposited to and accessible via PolarBase, which already indexes the full \esp\ and \spi\ archives, as well as TBL/NARVAL and ESO/HARPSPol archives. Intermediate and value-added products --- spectral templates, co-added spectra, LBL velocity time series, and activity diagnostics --- will be released with timelines adapted to the proprietary status of the underlying RV series, as described in the Data Management plan above.
+
+%CADC: \\
+%Polarbase: \\
+
+\newpage
+
+\bibliographystyle{aa} 
+\bibliography{references,references2,refwp1,refwp2,refwp3,refwp4,refwp5,refwp6}
+
+\end{document}
+
