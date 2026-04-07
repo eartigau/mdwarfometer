@@ -129,6 +129,41 @@
       z-index: 1;
     }
 
+    .topbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 0.9rem;
+    }
+
+    .lang-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #241216d9;
+      backdrop-filter: blur(6px);
+    }
+
+    .lang-toggle button {
+      padding: 0.38rem 0.75rem;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--ink-dim);
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .lang-toggle button.is-active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #2a0d0f;
+    }
+
     .card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -421,16 +456,22 @@
   <div class="star-bg sb9"></div>
   <div class="star-bg sb10"></div>
   <div class="wrap">
+    <div class="topbar">
+      <div class="lang-toggle" aria-label="Language selector">
+        <button id="lang_en_btn" type="button" data-lang="en">EN</button>
+        <button id="lang_fr_btn" type="button" data-lang="fr">FR</button>
+      </div>
+    </div>
     <div class="card">
-      <h1>STAR-O-METER</h1>
-      <p>
+      <h1 id="page_title">STAR-O-METER</h1>
+      <p id="intro_1">
         Enter a stellar identifier resolvable by <strong>SIMBAD</strong>, for example a common name,
         Bayer/Flamsteed designation, Gliese name, or Gaia-compatible alias. The tool fetches
         astrometry and broadband photometry from <strong>Gaia DR3</strong>, <strong>2MASS</strong>, and
         <strong>AllWISE</strong>, then reports coordinates, kinematics, and empirical stellar parameters.
       </p>
 
-      <p>
+      <p id="intro_2">
         The stellar-parameter part of the tool is intended for <strong>main-sequence stars only</strong>.
         M dwarfs use the dedicated empirical relations already implemented here; AFGK dwarfs use
         Gaia DR3 stellar parameters when available, otherwise an empirical dwarf-sequence fallback.
@@ -438,19 +479,19 @@
         page will warn you and will not compute derived stellar quantities.
       </p>
 
-      <p>
+      <p id="intro_3">
         The spectral energy distribution and Hertzsprung&#8211;Russell diagram position relative to the
         solar-neighbourhood sample (&lt;20&nbsp;pc) are displayed below when enough photometry is available.
       </p>
 
       <p class="muted contact-line">
-        <span>Created and maintained by &Eacute;. Artigau. Comments and suggestions are welcome at</span>
+        <span id="contact_prefix">Created and maintained by &Eacute;. Artigau. Comments and suggestions are welcome at</span>
         <span id="contact_email_image" aria-label="Contact email"></span>
       </p>
 
       <div class="row">
         <input id="target_name" type="text" placeholder="e.g., GJ 300" />
-        <button py-click="run_lookup">Resolve + Fetch</button>
+        <button id="lookup_btn" py-click="run_lookup">Resolve + Fetch</button>
         <button id="refresh_cache_btn" class="alt" py-click="refresh_cache">Refresh cache</button>
       </div>
 
@@ -458,23 +499,157 @@
       <div id="result"></div>
       <div id="manual"></div>
 
-      <p class="muted">
+      <p id="server_note" class="muted">
         Requires a same-origin (or CORS-permitting) HTTP server; opening as a plain <code>file://</code> URL
         will block cross-origin TAP queries.
       </p>
     </div>
     <div id="sed_card" class="card" style="display:none;margin-top:1rem;">
       <div id="sed_plot"></div>
+      <div id="sed_blackbody_info" class="muted" style="margin-top:0.6rem;"></div>
       <div id="hr_plot" style="margin-top:0.5rem;"></div>
     </div>
 
-    <p class="muted" style="margin:1rem 0 0.2rem 0;padding:0 0.25rem;">
-      Last updated: 2026-04-07
+    <p id="last_updated" class="muted" style="margin:1rem 0 0.2rem 0;padding:0 0.25rem;">
+      Last updated:
     </p>
   </div>
 
   <script>
     (function () {
+      const I18N = {
+        en: {
+          title: 'STAR-O-METER',
+          intro1: 'Enter a stellar identifier resolvable by <strong>SIMBAD</strong>, for example a common name, Bayer/Flamsteed designation, Gliese name, or Gaia-compatible alias. The tool fetches astrometry and broadband photometry from <strong>Gaia DR3</strong>, <strong>2MASS</strong>, and <strong>AllWISE</strong>, then reports coordinates, kinematics, and empirical stellar parameters.',
+          intro2: 'The stellar-parameter part of the tool is intended for <strong>main-sequence stars only</strong>. M dwarfs use the dedicated empirical relations already implemented here; AFGK dwarfs use Gaia DR3 stellar parameters when available, otherwise an empirical dwarf-sequence fallback. If the target is a white dwarf, giant, subgiant, or another non-main-sequence object, the page will warn you and will not compute derived stellar quantities.',
+          intro3: 'The spectral energy distribution and Hertzsprung&#8211;Russell diagram position relative to the solar-neighbourhood sample (&lt;20&nbsp;pc) are displayed below when enough photometry is available.',
+          contactPrefix: 'Created and maintained by &Eacute;. Artigau. Comments and suggestions are welcome at',
+          placeholder: 'e.g., GJ 300',
+          lookup: 'Resolve + Fetch',
+          refresh: 'Refresh cache',
+          serverNote: 'Requires a same-origin (or CORS-permitting) HTTP server; opening as a plain <code>file://</code> URL will block cross-origin TAP queries.',
+          lastUpdated: 'Last updated:',
+          receivedTarget: "Received target from URL: '{target}'. Preparing lookup...",
+          plotSed: 'Spectral Energy Distribution',
+          plotHr: 'HR Diagram (&lt;20 pc)',
+          plotSample: '&lt;20 pc sample',
+        },
+        fr: {
+          title: 'étoile-o-mètre',
+          intro1: 'Entrez un identifiant stellaire r&eacute;soluble par <strong>SIMBAD</strong>, par exemple un nom usuel, une d&eacute;signation de Bayer/Flamsteed, un nom Gliese, ou un alias compatible Gaia. L&rsquo;outil va chercher l&rsquo;astrom&eacute;trie et la photom&eacute;trie large bande dans <strong>Gaia DR3</strong>, <strong>2MASS</strong> et <strong>AllWISE</strong>, puis affiche les coordonn&eacute;es, la cin&eacute;matique et des param&egrave;tres stellaires empiriques.',
+          intro2: 'La partie param&egrave;tres stellaires de l&rsquo;outil est pr&eacute;vue pour les <strong>&eacute;toiles de la s&eacute;quence principale uniquement</strong>. Les naines M utilisent les relations empiriques d&eacute;di&eacute;es d&eacute;j&agrave; impl&eacute;ment&eacute;es ici; les naines AFGK utilisent les param&egrave;tres stellaires Gaia DR3 quand ils sont disponibles, sinon une interpolation dans une s&eacute;quence empirique de naines. Si la cible est une naine blanche, une g&eacute;ante, une sous-g&eacute;ante, ou un autre objet hors s&eacute;quence principale, la page vous avertira et ne calculera pas les quantit&eacute;s stellaires d&eacute;riv&eacute;es.',
+          intro3: 'La distribution spectrale d&rsquo;&eacute;nergie et la position dans le diagramme de Hertzsprung-Russell par rapport &agrave; l&rsquo;&eacute;chantillon du voisinage solaire (&lt;20&nbsp;pc) sont affich&eacute;es ci-dessous quand la photom&eacute;trie disponible est suffisante.',
+          contactPrefix: 'Cr&eacute;&eacute; et maintenu par &Eacute;. Artigau. Les commentaires et suggestions sont bienvenus &agrave;',
+          placeholder: 'p. ex., GJ 300',
+          lookup: 'Résoudre + interroger',
+          refresh: 'Rafraîchir le cache',
+          serverNote: 'N&eacute;cessite un serveur HTTP de m&ecirc;me origine (ou autorisant le CORS); une ouverture directe en URL <code>file://</code> bloquera les requ&ecirc;tes TAP inter-origines.',
+          lastUpdated: 'Derni&egrave;re mise &agrave; jour :',
+          receivedTarget: "Cible re&ccedil;ue depuis l&rsquo;URL : '{target}'. Pr&eacute;paration de la requ&ecirc;te...",
+          plotSed: 'Distribution spectrale d&rsquo;&eacute;nergie',
+          plotHr: 'Diagramme HR (&lt;20 pc)',
+          plotSample: '&Eacute;chantillon &lt;20 pc',
+        },
+      };
+
+      function detectInitialLanguage() {
+        const saved = window.localStorage.getItem('starometer_lang');
+        if (saved === 'fr' || saved === 'en') {
+          return saved;
+        }
+        const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+        return browserLang.startsWith('fr') ? 'fr' : 'en';
+      }
+
+      let currentLanguage = detectInitialLanguage();
+
+      function tr(key, params = {}) {
+        const dict = I18N[currentLanguage] || I18N.en;
+        let value = dict[key] || I18N.en[key] || '';
+        Object.entries(params).forEach(([name, replacement]) => {
+          value = value.replaceAll(`{${name}}`, replacement);
+        });
+        return value;
+      }
+
+      function formatDisplayTimestamp(language) {
+        const locale = language === 'fr' ? 'fr-CA' : 'en-CA';
+        return new Intl.DateTimeFormat(locale, {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+        }).format(new Date());
+      }
+
+      function updateTimestamp() {
+        const node = document.getElementById('last_updated');
+        if (node) {
+          node.innerHTML = `${tr('lastUpdated')} ${formatDisplayTimestamp(currentLanguage)}`;
+        }
+      }
+
+      function applyLanguage() {
+        document.documentElement.lang = currentLanguage;
+        document.title = currentLanguage === 'fr' ? 'étoile-o-mètre' : 'STAR-O-METER';
+
+        const setHtml = (id, value) => {
+          const node = document.getElementById(id);
+          if (node) {
+            node.innerHTML = value;
+          }
+        };
+        const setText = (id, value) => {
+          const node = document.getElementById(id);
+          if (node) {
+            node.textContent = value;
+          }
+        };
+
+        setText('page_title', tr('title'));
+        setHtml('intro_1', tr('intro1'));
+        setHtml('intro_2', tr('intro2'));
+        setHtml('intro_3', tr('intro3'));
+        setHtml('contact_prefix', tr('contactPrefix'));
+        setHtml('server_note', tr('serverNote'));
+
+        const input = document.getElementById('target_name');
+        if (input) {
+          input.placeholder = tr('placeholder');
+        }
+
+        setText('lookup_btn', tr('lookup'));
+        setText('refresh_cache_btn', tr('refresh'));
+
+        const enBtn = document.getElementById('lang_en_btn');
+        const frBtn = document.getElementById('lang_fr_btn');
+        if (enBtn) {
+          enBtn.classList.toggle('is-active', currentLanguage === 'en');
+        }
+        if (frBtn) {
+          frBtn.classList.toggle('is-active', currentLanguage === 'fr');
+        }
+
+        window.STAROMETER_I18N = {
+          lang: currentLanguage,
+          strings: I18N[currentLanguage] || I18N.en,
+        };
+
+        updateTimestamp();
+      }
+
+      function setLanguage(language) {
+        currentLanguage = language === 'fr' ? 'fr' : 'en';
+        window.localStorage.setItem('starometer_lang', currentLanguage);
+        applyLanguage();
+        if (typeof window.starometerRerender === 'function') {
+          window.starometerRerender();
+        }
+      }
+
       function renderObfuscatedEmail() {
         const host = document.getElementById('contact_email_image');
         if (!host) {
@@ -548,6 +723,14 @@
       const target = extractTargetFromUrl();
 
       window.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('lang_en_btn')?.addEventListener('click', function () {
+          setLanguage('en');
+        });
+        document.getElementById('lang_fr_btn')?.addEventListener('click', function () {
+          setLanguage('fr');
+        });
+
+        applyLanguage();
         renderObfuscatedEmail();
 
         if (!target) {
@@ -571,7 +754,7 @@
         spinner.className = 'spinner';
 
         const label = document.createElement('span');
-        label.textContent = "Received target from URL: '" + target + "'. Preparing lookup...";
+        label.innerHTML = tr('receivedTarget', { target });
 
         wrapper.appendChild(spinner);
         wrapper.appendChild(label);
@@ -614,6 +797,19 @@
   M_G_MDWARF_MIN = 7.5
   M_G_MDWARF_MAX = 16.5
   HR_BG_DATA = None  # cached <20 pc Gaia sample for HR diagram
+
+
+  def current_language():
+    i18n = getattr(window, "STAROMETER_I18N", None)
+    lang = getattr(i18n, "lang", None) if i18n is not None else None
+    return "fr" if lang == "fr" else "en"
+
+
+  def tr(en_text, fr_text=None, **kwargs):
+    text = fr_text if current_language() == "fr" and fr_text is not None else en_text
+    return text.format(**kwargs)
+
+
   PHOT_KEYS = [
     "parallax_mas",
     "G_mag",
@@ -647,6 +843,7 @@
   PROBLEMATIC_RV_THRESHOLD_KMS = 5.0
   NON_LEAP_MONTH_LENGTHS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
   NON_LEAP_MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  NON_LEAP_MONTH_NAMES_FR = ["jan", "fev", "mar", "avr", "mai", "jun", "jul", "aou", "sep", "oct", "nov", "dec"]
   EQUATORIAL_TO_GALACTIC_MATRIX = [
     [-0.0548755604, -0.8734370902, -0.4838350155],
     [0.4941094279, -0.4448296300, 0.7469822445],
@@ -881,7 +1078,15 @@
       return
 
     target_input.value = target
-    set_status(f"Fetching information for target '{target}'...", "ok", loading=True)
+    set_status(
+      tr(
+        "Fetching information for target '{target}'...",
+        "Recherche des informations pour la cible '{target}'...",
+        target=target,
+      ),
+      "ok",
+      loading=True,
+    )
     await run_lookup()
 
 
@@ -956,11 +1161,12 @@
   def day_of_year_to_label(day_index):
     day_number = day_index + 1
     remaining = day_number
-    for month_name, month_length in zip(NON_LEAP_MONTH_NAMES, NON_LEAP_MONTH_LENGTHS):
+    month_names = NON_LEAP_MONTH_NAMES_FR if current_language() == "fr" else NON_LEAP_MONTH_NAMES
+    for month_name, month_length in zip(month_names, NON_LEAP_MONTH_LENGTHS):
       if remaining <= month_length:
         return f"{month_name} {remaining:02d}"
       remaining -= month_length
-    return "Dec 31"
+    return "dec 31" if current_language() == "fr" else "Dec 31"
 
 
   def summarize_problematic_rv_windows(ra_deg, dec_deg, rv_kms):
@@ -994,14 +1200,15 @@
       ranges = [(last_start, first_end)] + ranges[1:-1]
 
     if not ranges:
-      return ecl_lon_deg, ecl_lat_deg, "always &gt; 5 km/s"
+      return ecl_lon_deg, ecl_lat_deg, "toujours &gt; 5 km/s" if current_language() == "fr" else "always &gt; 5 km/s"
 
     segments = []
     for start_day, end_day in ranges:
       if start_day == end_day:
         segments.append(day_of_year_to_label(start_day))
       else:
-        segments.append(f"{day_of_year_to_label(start_day)} to {day_of_year_to_label(end_day)}")
+        separator = " au " if current_language() == "fr" else " to "
+        segments.append(f"{day_of_year_to_label(start_day)}{separator}{day_of_year_to_label(end_day)}")
 
     return ecl_lon_deg, ecl_lat_deg, " ; ".join(segments)
 
@@ -1080,6 +1287,88 @@
     if parallax_mas is None or parallax_mas <= 0:
       return None
     return 1000.0 / parallax_mas
+
+
+  def planck_b_nu_si(wavelength_um, teff_k):
+    if wavelength_um is None or wavelength_um <= 0 or teff_k is None or teff_k <= 0:
+      return None
+    h_si = 6.62607015e-34
+    c_si = 2.99792458e8
+    k_si = 1.380649e-23
+    wavelength_m = wavelength_um * 1.0e-6
+    nu_hz = c_si / wavelength_m
+    exponent = h_si * nu_hz / (k_si * teff_k)
+    if exponent > 700:
+      return 0.0
+    return (2.0 * h_si * (nu_hz ** 3) / (c_si ** 2)) / (math.exp(exponent) - 1.0)
+
+
+  def blackbody_flux_jy(wavelength_um, teff_k, scale_r_over_d_sq):
+    b_nu_si = planck_b_nu_si(wavelength_um, teff_k)
+    if b_nu_si is None or scale_r_over_d_sq is None or scale_r_over_d_sq <= 0:
+      return None
+    flux_si = math.pi * b_nu_si * scale_r_over_d_sq
+    return flux_si / 1.0e-26
+
+
+  def fit_blackbody_to_sed_points(wavelengths_um, fluxes_jy, flux_errors_jy, distance_pc):
+    if distance_pc is None or distance_pc <= 0:
+      return None
+    if len(wavelengths_um) < 3 or len(fluxes_jy) != len(wavelengths_um) or len(flux_errors_jy) != len(wavelengths_um):
+      return None
+
+    best = None
+    for teff_k in range(2200, 12001, 20):
+      model_unit = []
+      weights = []
+      valid = True
+      for wavelength_um, flux_jy, flux_error_jy in zip(wavelengths_um, fluxes_jy, flux_errors_jy):
+        b_nu_si = planck_b_nu_si(wavelength_um, teff_k)
+        if b_nu_si is None:
+          valid = False
+          break
+        model_jy = (math.pi * b_nu_si) / 1.0e-26
+        if model_jy <= 0:
+          valid = False
+          break
+        sigma_jy = flux_error_jy if flux_error_jy is not None and flux_error_jy > 0 else max(0.08 * flux_jy, 1.0e-6)
+        weights.append(1.0 / (sigma_jy ** 2))
+        model_unit.append(model_jy)
+      if not valid:
+        continue
+
+      numerator = sum(weight * model * flux for weight, model, flux in zip(weights, model_unit, fluxes_jy))
+      denominator = sum(weight * (model ** 2) for weight, model in zip(weights, model_unit))
+      if denominator <= 0:
+        continue
+      scale = numerator / denominator
+      if scale <= 0:
+        continue
+      chi2 = sum(weight * ((flux - scale * model) ** 2) for weight, model, flux in zip(weights, model_unit, fluxes_jy))
+      if best is None or chi2 < best["chi2"]:
+        best = {
+          "teff_k": float(teff_k),
+          "scale": scale,
+          "chi2": chi2,
+        }
+
+    if best is None:
+      return None
+
+    pc_si = 3.085677581491367e16
+    rsun_si = 6.957e8
+    radius_m = distance_pc * pc_si * math.sqrt(best["scale"])
+    radius_rsun = radius_m / rsun_si
+    dof = max(len(wavelengths_um) - 2, 1)
+    reduced_chi2 = best["chi2"] / dof
+
+    return {
+      "teff_k": best["teff_k"],
+      "radius_rsun": radius_rsun,
+      "scale": best["scale"],
+      "chi2_red": reduced_chi2,
+      "n_points": len(wavelengths_um),
+    }
 
 
   def compute_absolute_g(data):
@@ -1796,7 +2085,11 @@
             break
         subtype_span = sequence_subtype(upper) - sequence_subtype(lower)
         weight = 0.0 if subtype_span <= 0 else (subtype - sequence_subtype(lower)) / subtype_span
-        anchor_note = f"spectral type {html.escape(str(sp_type))}"
+        anchor_note = tr(
+          "spectral type {sp_type}",
+          "type spectral {sp_type}",
+          sp_type=html.escape(str(sp_type)),
+        )
 
     if lower is None or upper is None:
       return None, ""
@@ -1810,9 +2103,11 @@
     logg = 4.438 + math.log10(mass) - 2.0 * math.log10(radius)
     lum = (radius ** 2) * (teff / 5778.0) ** 4
     type_note = f"{lower['spt']} to {upper['spt']}" if lower["spt"] != upper["spt"] else lower["spt"]
-    note = (
-      "Using empirical main-sequence interpolation from the Pecaut-Mamajek/Mamajek dwarf sequence "
-      f"for a star near {type_note}, anchored by {anchor_note}."
+    note = tr(
+      "Using empirical main-sequence interpolation from the Pecaut-Mamajek/Mamajek dwarf sequence for a star near {type_note}, anchored by {anchor_note}.",
+      "Interpolation empirique sur la sequence de naines de Pecaut-Mamajek/Mamajek pour une etoile proche de {type_note}, ancree par {anchor_note}.",
+      type_note=type_note,
+      anchor_note=anchor_note,
     )
     return {
       "teff_fgk_K": f"{teff:.0f}",
@@ -1847,57 +2142,73 @@
     data["mass_fgk_msun"] = None
     data["logg_fgk_cgs"] = None
     if is_white_dwarf_target(data):
-      data["calibration_mode"] = "White dwarf: main-sequence calibrations disabled"
+      data["calibration_mode"] = tr("White dwarf: main-sequence calibrations disabled", "Naine blanche : calibrations de sequence principale desactivees")
       apply_temperature_theme(data)
       return (
-        f"&#9888; Target classified as a <strong>white dwarf</strong> ({html.escape(str(data.get('sp_type') or data.get('otype_txt') or 'SIMBAD classification'))}); main-sequence empirical relations are not applicable.",
+        tr(
+          "&#9888; Target classified as a <strong>white dwarf</strong> ({classification}); main-sequence empirical relations are not applicable.",
+          "&#9888; Cible classee comme <strong>naine blanche</strong> ({classification}) ; les relations empiriques de sequence principale ne s'appliquent pas.",
+          classification=html.escape(str(data.get('sp_type') or data.get('otype_txt') or 'SIMBAD classification')),
+        ),
         "",
       )
     if luminosity_class == "non-main-sequence":
-      data["calibration_mode"] = "Non-main-sequence star: derived stellar parameters disabled"
+      data["calibration_mode"] = tr("Non-main-sequence star: derived stellar parameters disabled", "Etoile hors sequence principale : parametres stellaires derives desactives")
       apply_temperature_theme(data)
       return (
-        f"&#9888; Spectral type <strong>{html.escape(str(data.get('sp_type')))}</strong> is not luminosity class V; derived stellar parameters are only reported for main-sequence stars.",
+        tr(
+          "&#9888; Spectral type <strong>{sp_type}</strong> is not luminosity class V; derived stellar parameters are only reported for main-sequence stars.",
+          "&#9888; Le type spectral <strong>{sp_type}</strong> n'est pas de classe de luminosite V ; les parametres stellaires derives ne sont rapportes que pour les etoiles de la sequence principale.",
+          sp_type=html.escape(str(data.get('sp_type'))),
+        ),
         "",
       )
     is_m_candidate = (m_g is not None and M_G_MDWARF_MIN <= m_g <= M_G_MDWARF_MAX) or spectral_family == "M"
     is_fgk_candidate = spectral_family in {"A", "F", "G", "K"}
 
     if is_m_candidate:
-      data["calibration_mode"] = "M dwarf empirical: Mann et al. (2015) + Duque-Arribas et al. (2023)"
+      data["calibration_mode"] = tr("M dwarf empirical: Mann et al. (2015) + Duque-Arribas et al. (2023)", "Naine M empirique : Mann et al. (2015) + Duque-Arribas et al. (2023)")
     else:
       fgk_values, fgk_note = compute_fgk_main_sequence_parameters(data) if is_fgk_candidate or m_g is not None else (None, "")
       if fgk_values is not None:
-        data["calibration_mode"] = "AFGK main-sequence: Gaia DR3 GSP-Phot + FLAME"
+        data["calibration_mode"] = tr("AFGK main-sequence: Gaia DR3 GSP-Phot + FLAME", "Sequence principale AFGK : Gaia DR3 GSP-Phot + FLAME")
         for key, value in fgk_values.items():
           data[key] = value
         apply_temperature_theme(data)
-        note_text = "Using Gaia DR3 astrophysical parameters for an earlier-type main-sequence star."
+        note_text = tr("Using Gaia DR3 astrophysical parameters for an earlier-type main-sequence star.", "Utilisation des parametres astrophysiques Gaia DR3 pour une etoile de sequence principale plus precoce.")
         if fgk_note:
           note_text += " " + fgk_note
         return note_text, ""
       empirical_values, empirical_note = interpolate_fgk_empirical_sequence(data) if is_fgk_candidate or m_g is not None else (None, "")
       if empirical_values is not None:
-        data["calibration_mode"] = "AFGK main-sequence: Pecaut-Mamajek empirical dwarf sequence"
+        data["calibration_mode"] = tr("AFGK main-sequence: Pecaut-Mamajek empirical dwarf sequence", "Sequence principale AFGK : sequence empirique de naines de Pecaut-Mamajek")
         for key, value in empirical_values.items():
           data[key] = value
         apply_temperature_theme(data)
         return empirical_note, ""
       if fgk_note:
-        data["calibration_mode"] = "AFGK main-sequence candidate: Gaia DR3 parameters unavailable"
+        data["calibration_mode"] = tr("AFGK main-sequence candidate: Gaia DR3 parameters unavailable", "Candidate AFGK de sequence principale : parametres Gaia DR3 indisponibles")
         apply_temperature_theme(data)
         return fgk_note, ""
       if spectral_family in {"O", "B"}:
         apply_temperature_theme(data)
-        data["calibration_mode"] = "Early-type star: no empirical solution implemented"
+        data["calibration_mode"] = tr("Early-type star: no empirical solution implemented", "Etoile de type precoce : aucune solution empirique implementees")
         return (
-          f"&#9888; Spectral type <strong>{html.escape(str(data.get('sp_type')))}</strong> is earlier than the implemented AFGK and M-dwarf calibrations; derived stellar parameters not reported.",
+          tr(
+            "&#9888; Spectral type <strong>{sp_type}</strong> is earlier than the implemented AFGK and M-dwarf calibrations; derived stellar parameters not reported.",
+            "&#9888; Le type spectral <strong>{sp_type}</strong> est plus precoce que les calibrations AFGK et naines M implementees ; les parametres stellaires derives ne sont pas rapportes.",
+            sp_type=html.escape(str(data.get('sp_type'))),
+          ),
           "",
         )
 
     if not is_m_candidate and m_g is not None and (m_g < M_G_MDWARF_MIN or m_g > M_G_MDWARF_MAX):
       return (
-        f"&#9888; <strong>M<sub>G</sub> = {m_g:.2f}</strong> is outside the calibrated M-dwarf and AFGK main-sequence ranges; derived stellar parameters not reported.",
+        tr(
+          "&#9888; <strong>M<sub>G</sub> = {m_g:.2f}</strong> is outside the calibrated M-dwarf and AFGK main-sequence ranges; derived stellar parameters not reported.",
+          "&#9888; <strong>M<sub>G</sub> = {m_g:.2f}</strong> est hors des domaines calibres des naines M et des etoiles AFGK de sequence principale ; les parametres stellaires derives ne sont pas rapportes.",
+          m_g=m_g,
+        ),
         "",
       )
 
@@ -1956,19 +2267,19 @@
 
     val = normalize_value(node.value)
     if val is None:
-      set_status(f"No value entered for {key}.", "warn")
+      set_status(tr("No value entered for {key}.", "Aucune valeur saisie pour {key}.", key=key), "warn")
       return
 
     updated = LAST_RESULT.copy()
     updated[key] = val
     if key in PHOT_KEYS:
       feh_note, stellar_note = recompute_derived_fields(updated)
-      status_msg = "Value applied. " + feh_note + " " + stellar_note
+      status_msg = tr("Value applied. ", "Valeur appliquee. ") + feh_note + " " + stellar_note
     elif key in {"gaia_pmra_masyr", "gaia_pmdec_masyr", "rv_kms"}:
       recompute_kinematic_fields(updated)
-      status_msg = "Kinematic value applied. Derived velocities updated."
+      status_msg = tr("Kinematic value applied. Derived velocities updated.", "Valeur cinematique appliquee. Vitesses derivees mises a jour.")
     else:
-      status_msg = "Value applied."
+      status_msg = tr("Value applied.", "Valeur appliquee.")
 
     LAST_RESULT = updated
     EDITING_KEYS.discard(key)
@@ -2000,13 +2311,14 @@
       "_teff_sigma",
       "_teff_color",
     }
+    is_fr = current_language() == "fr"
     labels = {
-      "main_id": "Object identifier",
-      "sp_type": "Spectral type",
-      "calibration_mode": "Stellar inference mode",
-      "ra_deg": "RA (J2000)",
+      "main_id": "Identifiant de l'objet" if is_fr else "Object identifier",
+      "sp_type": "Type spectral" if is_fr else "Spectral type",
+      "calibration_mode": "Mode d'inference stellaire" if is_fr else "Stellar inference mode",
+      "ra_deg": "AD (J2000)" if is_fr else "RA (J2000)",
       "dec_deg": "DEC (J2000)",
-      "parallax_mas": "Parallax [mas]",
+      "parallax_mas": "Parallaxe [mas]" if is_fr else "Parallax [mas]",
       "G_mag": "<strong>G</strong> [mag]",
       "J_mag": "<strong>J</strong> [mag]",
       "H_mag": "<strong>H</strong> [mag]",
@@ -2021,26 +2333,26 @@
       "M_Ks_mag": "<strong>M<sub>Ks</sub></strong> [mag]",
       "teff_jh_K": "<strong>T<sub>eff</sub></strong> (BP&#8722;RP+J&#8722;H) [K]<sup title='Mann et al. (2015) Table 2 row 11'>a1</sup>",
       "teff_K": "<strong>T<sub>eff</sub></strong> (BP&#8722;RP) [K]<sup title='Mann et al. (2015) Table 2 row 1'>a2</sup>",
-      "teff_fgk_K": "<strong>T<sub>eff</sub></strong> (AFGK solution) [K]<sup title='Gaia DR3 or empirical dwarf-sequence fallback'>k</sup>",
+      "teff_fgk_K": "<strong>T<sub>eff</sub></strong> (solution AFGK) [K]<sup title='Gaia DR3 ou sequence empirique de naines'>k</sup>" if is_fr else "<strong>T<sub>eff</sub></strong> (AFGK solution) [K]<sup title='Gaia DR3 or empirical dwarf-sequence fallback'>k</sup>",
       "feh_duque_dex": "<strong>[Fe/H]</strong> [dex]<sup title='Duque-Arribas et al. (2023)'>b</sup>",
-      "feh_fgk_dex": "<strong>[M/H]</strong> (AFGK solution) [dex]<sup title='Gaia DR3 only; empirical fallback leaves this blank'>k</sup>",
+      "feh_fgk_dex": "<strong>[M/H]</strong> (solution AFGK) [dex]<sup title='Gaia DR3 seulement; vide en mode empirique'>k</sup>" if is_fr else "<strong>[M/H]</strong> (AFGK solution) [dex]<sup title='Gaia DR3 only; empirical fallback leaves this blank'>k</sup>",
       "radius_rsun": "<strong>R<sub>&#x2605;</sub></strong> (M<sub>Ks</sub>) [R<sub>&#x2609;</sub>]<sup title='Mann et al. (2015) Table 1 row 1'>c1</sup>",
       "radius_feh_rsun": "<strong>R<sub>&#x2605;</sub></strong> (M<sub>Ks</sub>+[Fe/H]) [R<sub>&#x2609;</sub>]<sup title='Mann et al. (2015) Table 1 row 2'>c2</sup>",
-      "radius_fgk_rsun": "<strong>R<sub>&#x2605;</sub></strong> (AFGK solution) [R<sub>&#x2609;</sub>]<sup title='Gaia DR3 FLAME or empirical dwarf-sequence fallback'>l</sup>",
+      "radius_fgk_rsun": "<strong>R<sub>&#x2605;</sub></strong> (solution AFGK) [R<sub>&#x2609;</sub>]<sup title='Gaia DR3 FLAME ou sequence empirique de naines'>l</sup>" if is_fr else "<strong>R<sub>&#x2605;</sub></strong> (AFGK solution) [R<sub>&#x2609;</sub>]<sup title='Gaia DR3 FLAME or empirical dwarf-sequence fallback'>l</sup>",
       "mass_msun": "<strong>M<sub>&#x2605;</sub></strong> (Mann+15, M<sub>Ks</sub>) [M<sub>&#x2609;</sub>]<sup title='Mann et al. (2015) Table 1 row 5'>d</sup>",
       "mass_del_msun": "<strong>M<sub>&#x2605;</sub></strong> (Delfosse+00, M<sub>K</sub>) [M<sub>&#x2609;</sub>]<sup title='Delfosse et al. (2000)'>f</sup>",
-      "mass_fgk_msun": "<strong>M<sub>&#x2605;</sub></strong> (AFGK solution) [M<sub>&#x2609;</sub>]<sup title='Gaia DR3 FLAME or empirical dwarf-sequence fallback'>l</sup>",
+      "mass_fgk_msun": "<strong>M<sub>&#x2605;</sub></strong> (solution AFGK) [M<sub>&#x2609;</sub>]<sup title='Gaia DR3 FLAME ou sequence empirique de naines'>l</sup>" if is_fr else "<strong>M<sub>&#x2605;</sub></strong> (AFGK solution) [M<sub>&#x2609;</sub>]<sup title='Gaia DR3 FLAME or empirical dwarf-sequence fallback'>l</sup>",
       "logg_cgs": "<strong>log g</strong> [cgs]<sup title='from R and M'>e</sup>",
-      "logg_fgk_cgs": "<strong>log g</strong> (AFGK solution) [cgs]<sup title='Gaia DR3 or reconstructed from empirical mass and radius'>k</sup>",
+      "logg_fgk_cgs": "<strong>log g</strong> (solution AFGK) [cgs]<sup title='Gaia DR3 ou reconstruit a partir de la masse et du rayon empiriques'>k</sup>" if is_fr else "<strong>log g</strong> (AFGK solution) [cgs]<sup title='Gaia DR3 or reconstructed from empirical mass and radius'>k</sup>",
       "lum_lsun": "<strong>L<sub>&#x2605;</sub></strong> [L<sub>&#x2609;</sub>]<sup title='from R and Teff'>h</sup>",
       "gaia_pmra_masyr": "<strong>&mu;<sub>&alpha;*</sub></strong> [mas/yr]",
       "gaia_pmdec_masyr": "<strong>&mu;<sub>&delta;</sub></strong> [mas/yr]",
       "rv_kms": "<strong>RV</strong> [km/s]",
-      "vsky_kms": "<strong>v<sub>sky</sub></strong> [km/s]<sup title='sky-plane velocity from Gaia proper motion and parallax'>g</sup>",
-      "v3d_kms": "<strong>v<sub>3D</sub></strong> [km/s]<sup title='3D space velocity (v_sky + RV)'>g2</sup>",
-      "U_kms": "<strong>U</strong> [km/s]<sup title='galactic velocity toward GC'>i</sup>",
-      "V_kms": "<strong>V</strong> [km/s]<sup title='galactic velocity in direction of rotation'>i</sup>",
-      "W_kms": "<strong>W</strong> [km/s]<sup title='galactic velocity toward NGP'>i</sup>",
+      "vsky_kms": "<strong>v<sub>sky</sub></strong> [km/s]<sup title='vitesse tangentielle issue du mouvement propre Gaia et de la parallaxe'>g</sup>" if is_fr else "<strong>v<sub>sky</sub></strong> [km/s]<sup title='sky-plane velocity from Gaia proper motion and parallax'>g</sup>",
+      "v3d_kms": "<strong>v<sub>3D</sub></strong> [km/s]<sup title='vitesse spatiale 3D (v_sky + RV)'>g2</sup>" if is_fr else "<strong>v<sub>3D</sub></strong> [km/s]<sup title='3D space velocity (v_sky + RV)'>g2</sup>",
+      "U_kms": "<strong>U</strong> [km/s]<sup title='vitesse galactique vers le centre galactique'>i</sup>" if is_fr else "<strong>U</strong> [km/s]<sup title='galactic velocity toward GC'>i</sup>",
+      "V_kms": "<strong>V</strong> [km/s]<sup title='vitesse galactique dans le sens de la rotation'>i</sup>" if is_fr else "<strong>V</strong> [km/s]<sup title='galactic velocity in direction of rotation'>i</sup>",
+      "W_kms": "<strong>W</strong> [km/s]<sup title='vitesse galactique vers le pole nord galactique'>i</sup>" if is_fr else "<strong>W</strong> [km/s]<sup title='galactic velocity toward NGP'>i</sup>",
     }
     ra_deg = parse_float(data.get("ra_deg"))
     dec_deg = parse_float(data.get("dec_deg"))
@@ -2049,21 +2361,21 @@
     ecl_lon_deg, ecl_lat_deg, telluric_summary = summarize_problematic_rv_windows(ra_deg, dec_deg, rv_kms)
     mann2015_link = "<a href='https://doi.org/10.1088/0004-637X/804/1/64' target='_blank' rel='noopener'>Mann et al. (2015), ApJ&nbsp;804,&nbsp;64</a>"
     footnote_text = {
-      "a1": f"<sup>a1</sup> {mann2015_link}, Table&nbsp;2 row&nbsp;11: T<sub>eff</sub> polynomial in G<sub>BP</sub>&#8722;G<sub>RP</sub> + J&#8722;H; &sigma; &#8776; 49&nbsp;K.",
-      "a2": f"<sup>a2</sup> {mann2015_link}, Table&nbsp;2 row&nbsp;1: T<sub>eff</sub> polynomial in G<sub>BP</sub>&#8722;G<sub>RP</sub> only; &sigma; &#8776; 52&nbsp;K.",
-      "b": "<sup>b</sup> <a href='https://doi.org/10.3847/1538-4357/acacf6' target='_blank' rel='noopener'>Duque-Arribas et al. (2023), ApJ&nbsp;944,&nbsp;88</a>: photometric [Fe/H] from G<sub>BP</sub>&#8722;G<sub>RP</sub>, W1&#8722;W2, and M<sub>Ks</sub>; &sigma; &#8776; 0.10 dex.",
-      "c1": f"<sup>c1</sup> {mann2015_link}, Table&nbsp;1 row&nbsp;1: radius polynomial in M<sub>Ks</sub>; &sigma; &#8776; 2.89%.",
-      "c2": f"<sup>c2</sup> {mann2015_link}, Table&nbsp;1 row&nbsp;2: radius polynomial in M<sub>Ks</sub> + [Fe/H]; &sigma; &#8776; 2.70%.",
-      "d": f"<sup>d</sup> {mann2015_link}, Table&nbsp;1: mass-luminosity polynomial in M<sub>Ks</sub>; &sigma; &#8776; 2%.",
-      "e": "<sup>e</sup> log&nbsp;g = log&nbsp;g<sub>&#x2609;</sub> + log(M/M<sub>&#x2609;</sub>) &#8722; 2&nbsp;log(R/R<sub>&#x2609;</sub>).",
-      "f": "<sup>f</sup> <a href='https://doi.org/10.1051/0004-6361:20001166' target='_blank' rel='noopener'>Delfosse et al. (2000), A&amp;A&nbsp;364,&nbsp;217</a>: log(M/M<sub>&#x2609;</sub>) = 10<sup>&#8722;3</sup>(1.8 + 6.12&middot;M<sub>K</sub> + 13.205&middot;M<sub>K</sub><sup>2</sup> &#8722; 6.2315&middot;M<sub>K</sub><sup>3</sup> + 0.37529&middot;M<sub>K</sub><sup>4</sup>); valid M<sub>K</sub>&isin;[4.5,&nbsp;9.5].",
-      "g": "<sup>g</sup> v<sub>sky</sub> = 4.74047 &times; d<sub>pc</sub> &times; &mu;<sub>tot</sub>&nbsp;[mas/yr] km/s; &mu;<sub>tot</sub> = (&mu;<sub>&alpha;*</sub><sup>2</sup> + &mu;<sub>&delta;</sub><sup>2</sup>)<sup>1/2</sup> from Gaia DR3.",
-      "g2": "<sup>g2</sup> v<sub>3D</sub> = (v<sub>sky</sub><sup>2</sup> + RV<sup>2</sup>)<sup>1/2</sup>; RV from SIMBAD.",
-      "h": "<sup>h</sup> L/L<sub>&#x2609;</sub> = (R/R<sub>&#x2609;</sub>)<sup>2</sup> (T<sub>eff</sub>/T<sub>&#x2609;</sub>)<sup>4</sup>, T<sub>&#x2609;</sub> = 5778&nbsp;K; uses BP&#8722;RP+J&#8722;H T<sub>eff</sub> when available.",
-      "i": "<sup>i</sup> Galactic UVW from Johnson &amp; Soderblom (1987, AJ&nbsp;93,&nbsp;864); U toward GC, V in direction of galactic rotation, W toward NGP. Requires RV.",
-      "j": "<sup>j</sup> Telluric-overlap windows use only the orbital barycentric term projected along the line of sight, sampled once per day over a non-leap year. Earth rotation is intentionally ignored (typically &lt;0.4 km/s effect).",
-      "k": "<sup>k</sup> For earlier main-sequence stars, the code first uses Gaia DR3 GSP-Phot/FLAME when available; otherwise it falls back to interpolation within the Pecaut-Mamajek/Mamajek empirical dwarf sequence using Gaia Bp-Rp and M<sub>G</sub>.",
-      "l": "<sup>l</sup> Gaia DR3 FLAME luminosity, radius, and mass estimates are preferred when available. In the empirical fallback, radius and mass come from the interpolated dwarf sequence and luminosity is then computed from radius and T<sub>eff</sub>.",
+      "a1": f"<sup>a1</sup> {mann2015_link}, {'Tableau&nbsp;2 ligne&nbsp;11 : polynome de T<sub>eff</sub> en G<sub>BP</sub>&#8722;G<sub>RP</sub> + J&#8722;H ; &sigma; &#8776; 49&nbsp;K.' if is_fr else 'Table&nbsp;2 row&nbsp;11: T<sub>eff</sub> polynomial in G<sub>BP</sub>&#8722;G<sub>RP</sub> + J&#8722;H; &sigma; &#8776; 49&nbsp;K.'}",
+      "a2": f"<sup>a2</sup> {mann2015_link}, {'Tableau&nbsp;2 ligne&nbsp;1 : polynome de T<sub>eff</sub> en G<sub>BP</sub>&#8722;G<sub>RP</sub> seulement ; &sigma; &#8776; 52&nbsp;K.' if is_fr else 'Table&nbsp;2 row&nbsp;1: T<sub>eff</sub> polynomial in G<sub>BP</sub>&#8722;G<sub>RP</sub> only; &sigma; &#8776; 52&nbsp;K.'}",
+      "b": "<sup>b</sup> <a href='https://doi.org/10.3847/1538-4357/acacf6' target='_blank' rel='noopener'>Duque-Arribas et al. (2023), ApJ&nbsp;944,&nbsp;88</a>: " + ("[Fe/H] photometrique a partir de G<sub>BP</sub>&#8722;G<sub>RP</sub>, W1&#8722;W2 et M<sub>Ks</sub> ; &sigma; &#8776; 0.10 dex." if is_fr else "photometric [Fe/H] from G<sub>BP</sub>&#8722;G<sub>RP</sub>, W1&#8722;W2, and M<sub>Ks</sub>; &sigma; &#8776; 0.10 dex."),
+      "c1": f"<sup>c1</sup> {mann2015_link}, {'Tableau&nbsp;1 ligne&nbsp;1 : polynome de rayon en M<sub>Ks</sub> ; &sigma; &#8776; 2.89%.' if is_fr else 'Table&nbsp;1 row&nbsp;1: radius polynomial in M<sub>Ks</sub>; &sigma; &#8776; 2.89%.'}",
+      "c2": f"<sup>c2</sup> {mann2015_link}, {'Tableau&nbsp;1 ligne&nbsp;2 : polynome de rayon en M<sub>Ks</sub> + [Fe/H] ; &sigma; &#8776; 2.70%.' if is_fr else 'Table&nbsp;1 row&nbsp;2: radius polynomial in M<sub>Ks</sub> + [Fe/H]; &sigma; &#8776; 2.70%.'}",
+      "d": f"<sup>d</sup> {mann2015_link}, {'Tableau&nbsp;1 : polynome masse-luminosite en M<sub>Ks</sub> ; &sigma; &#8776; 2%.' if is_fr else 'Table&nbsp;1: mass-luminosity polynomial in M<sub>Ks</sub>; &sigma; &#8776; 2%.'}",
+      "e": "<sup>e</sup> " + ("log&nbsp;g = log&nbsp;g<sub>&#x2609;</sub> + log(M/M<sub>&#x2609;</sub>) &#8722; 2&nbsp;log(R/R<sub>&#x2609;</sub>)."),
+      "f": "<sup>f</sup> <a href='https://doi.org/10.1051/0004-6361:20001166' target='_blank' rel='noopener'>Delfosse et al. (2000), A&amp;A&nbsp;364,&nbsp;217</a>: " + ("log(M/M<sub>&#x2609;</sub>) = 10<sup>&#8722;3</sup>(1.8 + 6.12&middot;M<sub>K</sub> + 13.205&middot;M<sub>K</sub><sup>2</sup> &#8722; 6.2315&middot;M<sub>K</sub><sup>3</sup> + 0.37529&middot;M<sub>K</sub><sup>4</sup>) ; valide pour M<sub>K</sub>&isin;[4.5,&nbsp;9.5]." if is_fr else "log(M/M<sub>&#x2609;</sub>) = 10<sup>&#8722;3</sup>(1.8 + 6.12&middot;M<sub>K</sub> + 13.205&middot;M<sub>K</sub><sup>2</sup> &#8722; 6.2315&middot;M<sub>K</sub><sup>3</sup> + 0.37529&middot;M<sub>K</sub><sup>4</sup>); valid M<sub>K</sub>&isin;[4.5,&nbsp;9.5]."),
+      "g": "<sup>g</sup> " + ("v<sub>sky</sub> = 4.74047 &times; d<sub>pc</sub> &times; &mu;<sub>tot</sub>&nbsp;[mas/yr] km/s ; &mu;<sub>tot</sub> = (&mu;<sub>&alpha;*</sub><sup>2</sup> + &mu;<sub>&delta;</sub><sup>2</sup>)<sup>1/2</sup> a partir de Gaia DR3." if is_fr else "v<sub>sky</sub> = 4.74047 &times; d<sub>pc</sub> &times; &mu;<sub>tot</sub>&nbsp;[mas/yr] km/s; &mu;<sub>tot</sub> = (&mu;<sub>&alpha;*</sub><sup>2</sup> + &mu;<sub>&delta;</sub><sup>2</sup>)<sup>1/2</sup> from Gaia DR3."),
+      "g2": "<sup>g2</sup> " + ("v<sub>3D</sub> = (v<sub>sky</sub><sup>2</sup> + RV<sup>2</sup>)<sup>1/2</sup> ; RV issue de SIMBAD." if is_fr else "v<sub>3D</sub> = (v<sub>sky</sub><sup>2</sup> + RV<sup>2</sup>)<sup>1/2</sup>; RV from SIMBAD."),
+      "h": "<sup>h</sup> " + ("L/L<sub>&#x2609;</sub> = (R/R<sub>&#x2609;</sub>)<sup>2</sup> (T<sub>eff</sub>/T<sub>&#x2609;</sub>)<sup>4</sup>, T<sub>&#x2609;</sub> = 5778&nbsp;K ; utilise T<sub>eff</sub> en BP&#8722;RP+J&#8722;H quand disponible." if is_fr else "L/L<sub>&#x2609;</sub> = (R/R<sub>&#x2609;</sub>)<sup>2</sup> (T<sub>eff</sub>/T<sub>&#x2609;</sub>)<sup>4</sup>, T<sub>&#x2609;</sub> = 5778&nbsp;K; uses BP&#8722;RP+J&#8722;H T<sub>eff</sub> when available."),
+      "i": "<sup>i</sup> " + ("UVW galactiques d'apres Johnson &amp; Soderblom (1987, AJ&nbsp;93,&nbsp;864) ; U vers le centre galactique, V dans le sens de la rotation galactique, W vers le PNG. Necessite RV." if is_fr else "Galactic UVW from Johnson &amp; Soderblom (1987, AJ&nbsp;93,&nbsp;864); U toward GC, V in direction of galactic rotation, W toward NGP. Requires RV."),
+      "j": "<sup>j</sup> " + ("Les fenetres de recouvrement tellurique utilisent uniquement la composante barycentrique orbitale projetee sur la ligne de visee, echantillonnee une fois par jour sur une annee non bissextile. La rotation de la Terre est ignoree volontairement (effet typiquement &lt;0.4 km/s)." if is_fr else "Telluric-overlap windows use only the orbital barycentric term projected along the line of sight, sampled once per day over a non-leap year. Earth rotation is intentionally ignored (typically &lt;0.4 km/s effect)."),
+      "k": "<sup>k</sup> " + ("Pour les etoiles plus precoces de la sequence principale, le code utilise d'abord Gaia DR3 GSP-Phot/FLAME quand disponible ; sinon il se rabat sur une interpolation dans la sequence empirique de naines de Pecaut-Mamajek/Mamajek a partir de Gaia Bp-Rp et M<sub>G</sub>." if is_fr else "For earlier main-sequence stars, the code first uses Gaia DR3 GSP-Phot/FLAME when available; otherwise it falls back to interpolation within the Pecaut-Mamajek/Mamajek empirical dwarf sequence using Gaia Bp-Rp and M<sub>G</sub>."),
+      "l": "<sup>l</sup> " + ("Les estimations Gaia DR3 FLAME de luminosite, rayon et masse sont privilegiees quand elles sont disponibles. Dans le cas empirique, le rayon et la masse proviennent de la sequence de naines interpolee, puis la luminosite est calculee a partir du rayon et de T<sub>eff</sub>." if is_fr else "Gaia DR3 FLAME luminosity, radius, and mass estimates are preferred when available. In the empirical fallback, radius and mass come from the interpolated dwarf sequence and luminosity is then computed from radius and T<sub>eff</sub>."),
     }
     note_ids_by_key = {
       "teff_jh_K": ["a1"],
@@ -2154,8 +2466,8 @@
         current_value = "" if v is None else v
         cell = (
           f'<div class="inline-actions">'
-          f'<input id="manual_{k}" class="table-input" type="number" step="any" value="{current_value}" placeholder="Enter value" />'
-          f'<button class="apply-btn" data-key="{k}">Apply</button>'
+          f'<input id="manual_{k}" class="table-input" type="number" step="any" value="{current_value}" placeholder="{"Entrer une valeur" if is_fr else "Enter value"}" />'
+          f'<button class="apply-btn" data-key="{k}">{"Appliquer" if is_fr else "Apply"}</button>'
           f'</div>'
         )
         action_cell = ""
@@ -2187,7 +2499,7 @@
         else:
           cell = "" if v is None else f'<span class="value-wrap">{v}</span>'
         if k in EDITABLE_KEYS:
-          action_cell = f'<button class="edit-btn" data-key="{k}">Edit</button>'
+          action_cell = f'<button class="edit-btn" data-key="{k}">{"Modifier" if is_fr else "Edit"}</button>'
         else:
           action_cell = ""
       row_html = f'<tr{row_cls}><th>{label}</th><td>{cell}</td><td class="actions">{action_cell}</td></tr>'
@@ -2197,24 +2509,24 @@
         extra_rows = []
         if gal_lon_deg is not None:
           extra_rows.append(
-            f'<tr><th>Galactic longitude <strong>l</strong> [deg]</th><td><span class="value-wrap">{gal_lon_deg:.4f}</span></td><td class="actions"></td></tr>'
+            f'<tr><th>{"Longitude galactique" if is_fr else "Galactic longitude"} <strong>l</strong> [deg]</th><td><span class="value-wrap">{gal_lon_deg:.4f}</span></td><td class="actions"></td></tr>'
           )
         if gal_lat_deg is not None:
           extra_rows.append(
-            f'<tr><th>Galactic latitude <strong>b</strong> [deg]</th><td><span class="value-wrap">{gal_lat_deg:+.4f}</span></td><td class="actions"></td></tr>'
+            f'<tr><th>{"Latitude galactique" if is_fr else "Galactic latitude"} <strong>b</strong> [deg]</th><td><span class="value-wrap">{gal_lat_deg:+.4f}</span></td><td class="actions"></td></tr>'
           )
         if ecl_lon_deg is not None:
           extra_rows.append(
-            f'<tr><th>Ecliptic longitude <strong>&lambda;</strong> [deg]</th><td><span class="value-wrap">{ecl_lon_deg:.4f}</span></td><td class="actions"></td></tr>'
+            f'<tr><th>{"Longitude ecliptique" if is_fr else "Ecliptic longitude"} <strong>&lambda;</strong> [deg]</th><td><span class="value-wrap">{ecl_lon_deg:.4f}</span></td><td class="actions"></td></tr>'
           )
         if ecl_lat_deg is not None:
           extra_rows.append(
-            f'<tr><th>Ecliptic latitude <strong>&beta;</strong> [deg]</th><td><span class="value-wrap">{ecl_lat_deg:+.4f}</span></td><td class="actions"></td></tr>'
+            f'<tr><th>{"Latitude ecliptique" if is_fr else "Ecliptic latitude"} <strong>&beta;</strong> [deg]</th><td><span class="value-wrap">{ecl_lat_deg:+.4f}</span></td><td class="actions"></td></tr>'
           )
         if telluric_summary is not None:
           active_note_ids.add("j")
           extra_rows.append(
-            f'<tr class="grp-kin"><th>|v<sub>sys</sub> + v<sub>bary,orb</sub>| &lt; 5 km/s<sup title="Orbital barycentric component only; daily sampling over a non-leap year.">j</sup></th><td>{telluric_summary}</td><td class="actions"></td></tr>'
+            f'<tr class="grp-kin"><th>|v<sub>sys</sub> + v<sub>bary,orb</sub>| &lt; 5 km/s<sup title="{"Composante barycentrique orbitale seulement; echantillonnage quotidien sur une annee non bissextile." if is_fr else "Orbital barycentric component only; daily sampling over a non-leap year."}">j</sup></th><td>{telluric_summary}</td><td class="actions"></td></tr>'
           )
         row_html += "".join(extra_rows)
       return row_html
@@ -2240,7 +2552,7 @@
     footnotes_html = "<br>".join(active_footnotes)
     footnotes_block = f"<div class='fn-block'>{footnotes_html}</div>" if footnotes_html else ""
     refs_html = data.get("refs_html") or ""
-    refs_block = f"<div class='fn-block' style='margin-top:0.4rem;'><strong>SIMBAD references:</strong><br>{refs_html}</div>" if refs_html else ""
+    refs_block = f"<div class='fn-block' style='margin-top:0.4rem;'><strong>{'References SIMBAD' if is_fr else 'SIMBAD references'}:</strong><br>{refs_html}</div>" if refs_html else ""
     document.getElementById("result").innerHTML = (
       f"<table>{rows}</table>"
       f"{footnotes_block}"
@@ -2259,6 +2571,8 @@
     """Render a Vega-flux SED (Jy vs wavelength) using Plotly."""
     if not hasattr(window, "Plotly"):
       return
+
+    i18n_strings = getattr(getattr(window, "STAROMETER_I18N", None), "strings", None)
 
     # (band key, effective wavelength μm, Vega zero-point Jy, error key or None)
     band_info = [
@@ -2289,9 +2603,15 @@
       name_list.append(band_key.replace("_mag", ""))
 
     sed_card = document.getElementById("sed_card")
+    bb_info = document.getElementById("sed_blackbody_info")
     if not wl_list:
       sed_card.style.display = "none"
+      if bb_info is not None:
+        bb_info.innerHTML = ""
       return
+
+    distance_pc = compute_distance_pc_from_parallax(parse_float(data.get("parallax_mas")))
+    fit_result = fit_blackbody_to_sed_points(wl_list, flux_list, err_list, distance_pc)
 
     trace = {
       "x": wl_list,
@@ -2310,7 +2630,59 @@
       "hovertemplate": "<b>%{text}</b><br>\u03bb = %{x} \u03bcm<br>F\u03bd = %{y:.3g} Jy<extra></extra>",
       "marker": {"color": "#ff7849", "size": 10, "symbol": "circle"},
       "line": {"color": "#ffb06899", "width": 1.5, "dash": "dot"},
+      "name": tr("Photometry", "Photometrie"),
     }
+
+    traces = [trace]
+
+    if fit_result is not None:
+      wl_min = min(wl_list)
+      wl_max = max(wl_list)
+      model_wl = []
+      model_flux = []
+      for idx in range(180):
+        mix = idx / 179.0
+        wavelength_um = math.exp(math.log(max(wl_min * 0.75, 0.3)) + mix * (math.log(min(wl_max * 1.6, 30.0)) - math.log(max(wl_min * 0.75, 0.3))))
+        flux_jy = blackbody_flux_jy(wavelength_um, fit_result["teff_k"], fit_result["scale"])
+        if flux_jy is None or flux_jy <= 0:
+          continue
+        model_wl.append(wavelength_um)
+        model_flux.append(flux_jy)
+
+      traces.append({
+        "x": model_wl,
+        "y": model_flux,
+        "mode": "lines",
+        "type": "scatter",
+        "name": tr("Blackbody fit", "Ajustement corps noir"),
+        "hovertemplate": "<b>Ajustement corps noir</b><br>\u03bb = %{x:.3f} \u03bcm<br>F\u03bd = %{y:.3g} Jy<extra></extra>" if current_language() == "fr" else "<b>Blackbody fit</b><br>\u03bb = %{x:.3f} \u03bcm<br>F\u03bd = %{y:.3g} Jy<extra></extra>",
+        "line": {"color": "#9fd4ff", "width": 2.4},
+      })
+
+    if bb_info is not None:
+      if fit_result is None:
+        if distance_pc is None:
+          bb_info.innerHTML = tr(
+            "Blackbody fit unavailable: a positive parallax is required to derive a radius from the SED.",
+            "Ajustement de corps noir indisponible : une parallaxe positive est necessaire pour deriver un rayon a partir de la SED.",
+          )
+        else:
+          bb_info.innerHTML = tr(
+            "Blackbody fit unavailable: at least three photometric points are required.",
+            "Ajustement de corps noir indisponible : au moins trois points photometriques sont necessaires.",
+          )
+      else:
+        bb_info.innerHTML = (
+          tr(
+            "Blackbody SED fit: <strong>T<sub>eff</sub></strong> = {teff:.0f} K, <strong>R</strong> = {radius:.3f} R<sub>sun</sub>, using {npts} bands at d = {distance:.2f} pc. <span class='muted'>(Broad-band blackbody proxy only; reduced \u03c7<sup>2</sup> = {chi2:.2f}.)</span>",
+            "Ajustement de corps noir de la SED : <strong>T<sub>eff</sub></strong> = {teff:.0f} K, <strong>R</strong> = {radius:.3f} R<sub>sun</sub>, avec {npts} bandes a d = {distance:.2f} pc. <span class='muted'>(Approximation de corps noir sur bandes larges seulement ; \u03c7<sup>2</sup> reduit = {chi2:.2f}.)</span>",
+            teff=fit_result["teff_k"],
+            radius=fit_result["radius_rsun"],
+            npts=fit_result["n_points"],
+            distance=distance_pc,
+            chi2=fit_result["chi2_red"],
+          )
+        )
 
     layout = {
       "plot_bgcolor": "#201114",
@@ -2334,8 +2706,9 @@
       },
       "margin": {"l": 65, "r": 25, "t": 45, "b": 55},
       "height": 380,
+      "legend": {"x": 0.02, "y": 0.98, "font": {"size": 11}, "bgcolor": "#0000", "bordercolor": "#0000"},
       "title": {
-        "text": "Spectral Energy Distribution",
+        "text": i18n_strings.plotSed if i18n_strings is not None else "Spectral Energy Distribution",
         "font": {"size": 15},
         "x": 0.04,
       },
@@ -2343,7 +2716,7 @@
 
     sed_card.style.display = "block"
     window.eval(
-      f"Plotly.newPlot('sed_plot', {json.dumps([trace])}, "
+      f"Plotly.newPlot('sed_plot', {json.dumps(traces)}, "
       f"{json.dumps(layout)}, {{responsive:true}})"
     )
 
@@ -2393,6 +2766,8 @@
     if not hasattr(window, "Plotly"):
       return
 
+    i18n_strings = getattr(getattr(window, "STAROMETER_I18N", None), "strings", None)
+
     bg = HR_BG_DATA or []
     bg_col  = [r["col"] for r in bg]
     bg_mg   = [r["m_g"] for r in bg]
@@ -2413,7 +2788,7 @@
       "y": bg_mg,
       "mode": "markers",
       "type": "scatter",
-      "name": "<20 pc sample",
+      "name": i18n_strings.plotSample if i18n_strings is not None else "<20 pc sample",
       "marker": {"color": "#ffb068", "size": 4, "opacity": 0.35, "symbol": "circle"},
       "hovertemplate": "G<sub>BP</sub>&#8722;G<sub>RP</sub> = %{x:.2f}<br>M<sub>G</sub> = %{y:.2f}<extra><20 pc</extra>",
     }
@@ -2457,7 +2832,7 @@
       "height": 380,
       "legend": {"x": 0.02, "y": 0.05, "font": {"size": 11},
                  "bgcolor": "#0000", "bordercolor": "#0000"},
-      "title": {"text": "HR Diagram (&lt;20 pc)", "font": {"size": 15}, "x": 0.04},
+      "title": {"text": i18n_strings.plotHr if i18n_strings is not None else "HR Diagram (&lt;20 pc)", "font": {"size": 15}, "x": 0.04},
     }
 
     sed_card = document.getElementById("sed_card")
@@ -2472,6 +2847,11 @@
     document.getElementById("manual").innerHTML = ""
 
 
+  def rerender_current_view(event=None):
+    if LAST_RESULT:
+      render_table(LAST_RESULT)
+
+
   LAST_RESULT = {}
 
 
@@ -2480,12 +2860,12 @@
 
     target = document.getElementById("target_name").value.strip()
     if not target:
-      set_status("Please enter a target name.", "warn")
+      set_status(tr("Please enter a target name.", "Entrez un nom de cible."), "warn")
       return
 
     # Fetch HR background sample once (cached in localStorage)
     if HR_BG_DATA is None:
-      set_status("Fetching &lt;20 pc HR diagram sample...", "ok", loading=True)
+      set_status(tr("Fetching &lt;20 pc HR diagram sample...", "Chargement de l'echantillon HR &lt;20 pc..."), "ok", loading=True)
       ok_hr, _ = await run_with_timeout(fetch_hr_background_sample(), 20)
       if not ok_hr:
         pass  # non-fatal; HR plot will just show no background
@@ -2506,15 +2886,15 @@
       missing_cached = [k for k in PHOT_KEYS if cached.get(k) is None]
       render_manual_fields(missing_cached, cached)
       if missing_cached:
-        set_status(f"Loaded cached values for '{target}'. Some fields are still missing and can be filled below.", "warn")
+        set_status(tr("Loaded cached values for '{target}'. Some fields are still missing and can be filled below.", "Valeurs en cache chargees pour '{target}'. Certains champs manquent encore et peuvent etre remplis ci-dessous.", target=target), "warn")
       else:
-        set_status(f"Loaded cached values for '{target}' (no refetch needed).", "ok")
+        set_status(tr("Loaded cached values for '{target}' (no refetch needed).", "Valeurs en cache chargees pour '{target}' (pas de nouvelle requete necessaire).", target=target), "ok")
       return
 
     set_refresh_button_visible(False)
     EDITING_KEYS.clear()
 
-    set_status(f"Resolving '{target}' in SIMBAD...", "ok", loading=True)
+    set_status(tr("Resolving '{target}' in SIMBAD...", "Resolution de '{target}' dans SIMBAD...", target=target), "ok", loading=True)
     document.getElementById("result").innerHTML = ""
     document.getElementById("manual").innerHTML = ""
     document.getElementById("sed_card").style.display = "none"
@@ -2545,7 +2925,7 @@
       data = payload.get("data", [])
 
       if not data:
-        set_status("Target not found in SIMBAD with that exact identifier. Try another alias.", "error")
+        set_status(tr("Target not found in SIMBAD with that exact identifier. Try another alias.", "Cible introuvable dans SIMBAD avec cet identifiant exact. Essayez un autre alias."), "error")
         return
 
       row = data[0]
@@ -2563,7 +2943,7 @@
         "K_mag",
       ]
       result = {k: normalize_value(v) for k, v in zip(keys, row)}
-      set_status("SIMBAD core photometry fetched. Looking for Gaia/WISE complements...", "ok", loading=True)
+      set_status(tr("SIMBAD core photometry fetched. Looking for Gaia/WISE complements...", "Photometrie de base SIMBAD recuperee. Recherche des complements Gaia/WISE..."), "ok", loading=True)
 
       # Start with unknown values; try automatic external fetch from identifiers.
       result["GBP_mag"] = None
@@ -2619,7 +2999,7 @@
       autofill_notes = []
       if gaia_source_id is not None:
         result["gaia_source_id"] = gaia_source_id
-        set_status("Gaia match found. Fetching <strong>G<sub>BP</sub></strong> and <strong>G<sub>RP</sub></strong>...", "ok", loading=True)
+        set_status(tr("Gaia match found. Fetching <strong>G<sub>BP</sub></strong> and <strong>G<sub>RP</sub></strong>...", "Contrepartie Gaia trouvee. Recuperation de <strong>G<sub>BP</sub></strong> et <strong>G<sub>RP</sub></strong>..."), "ok", loading=True)
         ok_gaia, gaia_vals = await run_with_timeout(fetch_gaia_bp_rp_by_id(gaia_release, gaia_source_id), 5)
         if ok_gaia and gaia_vals is not None:
           gbp, grp, gbp_err, grp_err, gaia_ra, gaia_dec, gaia_pmra, gaia_pmdec, gaia_ref_epoch = gaia_vals
@@ -2642,7 +3022,7 @@
           autofill_notes.append("Gaia identifier lookup timed out")
 
       if result.get("GBP_mag") is None or result.get("GRP_mag") is None:
-        set_status("Trying Gaia positional fallback for <strong>G<sub>BP</sub></strong>/<strong>G<sub>RP</sub></strong>...", "ok", loading=True)
+        set_status(tr("Trying Gaia positional fallback for <strong>G<sub>BP</sub></strong>/<strong>G<sub>RP</sub></strong>...", "Essai du repli Gaia par position pour <strong>G<sub>BP</sub></strong>/<strong>G<sub>RP</sub></strong>..."), "ok", loading=True)
         ra_deg = parse_float(result.get("ra_deg"))
         dec_deg = parse_float(result.get("dec_deg"))
         ok_gaia_pos, gaia_pos_vals = await run_with_timeout(fetch_gaia_bp_rp_by_position(ra_deg, dec_deg), 5)
@@ -2680,7 +3060,7 @@
             result["gaia_ref_epoch"] = str(gaia_epoch_pos)
 
       if gaia_source_id is not None:
-        set_status("Fetching Gaia DR3 astrophysical parameters for the stellar solution...", "ok", loading=True)
+        set_status(tr("Fetching Gaia DR3 astrophysical parameters for the stellar solution...", "Recuperation des parametres astrophysiques Gaia DR3 pour la solution stellaire..."), "ok", loading=True)
         ok_gaia_astro, gaia_astro = await run_with_timeout(fetch_gaia_astrophysical_by_id(gaia_source_id), 5)
         if ok_gaia_astro and gaia_astro is not None:
           for key, value in gaia_astro.items():
@@ -2689,7 +3069,7 @@
           autofill_notes.append("Loaded Gaia DR3 GSP-Phot/FLAME parameters when available")
 
       if result.get("W1_mag") is None or result.get("W2_mag") is None:
-        set_status("Querying AllWISE via CDS/VizieR positional xmatch...", "ok", loading=True)
+        set_status(tr("Querying AllWISE via CDS/VizieR positional xmatch...", "Interrogation de AllWISE via la correspondance positionnelle CDS/VizieR..."), "ok", loading=True)
         gra = parse_float(result.get("gaia_ra_deg"))
         gdec = parse_float(result.get("gaia_dec_deg"))
         gpmra = parse_float(result.get("gaia_pmra_masyr"))
@@ -2702,7 +3082,12 @@
           ra_wise, dec_wise = propagate_position_deg(gra, gdec, gpmra, gpmdec, dt_yr)
           wise_radius = compute_wise_match_radius_arcsec(gpmra, gpmdec, dt_yr)
           set_status(
-            f"AllWISE xmatch: propagated Gaia epoch {ge:.1f} -> 2010.5, radius={wise_radius:.1f} arcsec...",
+            tr(
+              "AllWISE xmatch: propagated Gaia epoch {epoch:.1f} -> 2010.5, radius={radius:.1f} arcsec...",
+              "AllWISE xmatch : propagation de l'epoque Gaia {epoch:.1f} -> 2010.5, rayon={radius:.1f} arcsec...",
+              epoch=ge,
+              radius=wise_radius,
+            ),
             "ok",
             loading=True,
           )
@@ -2710,7 +3095,7 @@
           ra_wise = parse_float(result.get("ra_deg"))
           dec_wise = parse_float(result.get("dec_deg"))
           wise_radius = 60.0
-          set_status("AllWISE xmatch: Gaia PM unavailable, using SIMBAD position with 60 arcsec radius...", "ok", loading=True)
+          set_status(tr("AllWISE xmatch: Gaia PM unavailable, using SIMBAD position with 60 arcsec radius...", "AllWISE xmatch : mouvement propre Gaia indisponible, utilisation de la position SIMBAD avec un rayon de 60 arcsec..."), "ok", loading=True)
 
         ok_wise_pos, wise_pos_vals = await run_with_timeout(fetch_wise_w1_w2_by_position(ra_wise, dec_wise, wise_radius), 10)
         if ok_wise_pos and wise_pos_vals is not None:
@@ -2746,30 +3131,27 @@
 
       if missing:
         extra = (" " + "; ".join(autofill_notes) + ".") if autofill_notes else ""
-        set_status(
-          "SIMBAD resolved target, but some values are missing. Fill them manually below. " + feh_note + " " + stellar_note + extra,
-          "warn",
-        )
+        set_status(tr("SIMBAD resolved target, but some values are missing. Fill them manually below. ", "La cible a ete resolue par SIMBAD, mais certaines valeurs manquent. Remplissez-les manuellement ci-dessous. ") + feh_note + " " + stellar_note + extra, "warn")
         render_manual_fields(missing, result)
       else:
         extra = (" " + "; ".join(autofill_notes) + ".") if autofill_notes else ""
-        set_status("All requested properties were found. " + feh_note + " " + stellar_note + extra, "ok")
+        set_status(tr("All requested properties were found. ", "Toutes les proprietes demandees ont ete trouvees. ") + feh_note + " " + stellar_note + extra, "ok")
 
     except Exception as exc:
       if isinstance(exc, asyncio.TimeoutError):
-        set_status("Query timed out while contacting a remote service. Please retry; cached results will be used once available.", "error")
+        set_status(tr("Query timed out while contacting a remote service. Please retry; cached results will be used once available.", "La requete a expire en contactant un service distant. Reessayez; les resultats en cache seront utilises des qu'ils seront disponibles."), "error")
       else:
-        set_status(f"Query failed: {exc}", "error")
+        set_status(tr("Query failed: {exc}", "Echec de la requete : {exc}", exc=exc), "error")
 
 
   async def refresh_cache(event=None):
     target = document.getElementById("target_name").value.strip()
     if not target:
-      set_status("Enter a target name before refreshing cache.", "warn")
+      set_status(tr("Enter a target name before refreshing cache.", "Entrez un nom de cible avant de rafraichir le cache."), "warn")
       return
     clear_cached_result(target)
     set_refresh_button_visible(False)
-    set_status(f"Cache cleared for '{target}'. Fetching fresh data...", "ok", loading=True)
+    set_status(tr("Cache cleared for '{target}'. Fetching fresh data...", "Cache efface pour '{target}'. Recuperation de donnees fraiches...", target=target), "ok", loading=True)
     await run_lookup(force_refresh=True)
 
 
@@ -2777,7 +3159,7 @@
     global LAST_RESULT
 
     if not LAST_RESULT:
-      set_status("No target result to update yet.", "warn")
+      set_status(tr("No target result to update yet.", "Aucun resultat de cible a mettre a jour pour l'instant."), "warn")
       return
 
     updated = LAST_RESULT.copy()
@@ -2793,7 +3175,7 @@
         changed = True
 
     if not changed:
-      set_status("No manual values entered.", "warn")
+      set_status(tr("No manual values entered.", "Aucune valeur manuelle n'a ete saisie."), "warn")
       return
 
     feh_note, stellar_note = recompute_derived_fields(updated)
@@ -2806,9 +3188,9 @@
     render_manual_fields(still_missing, updated)
 
     if still_missing:
-      set_status("Manual values applied. Some fields are still missing. " + feh_note + " " + stellar_note, "warn")
+      set_status(tr("Manual values applied. Some fields are still missing. ", "Valeurs manuelles appliquees. Certains champs manquent encore. ") + feh_note + " " + stellar_note, "warn")
     else:
-      set_status("Manual values applied. Dataset is now complete for Phase 1. " + feh_note + " " + stellar_note, "ok")
+      set_status(tr("Manual values applied. Dataset is now complete for Phase 1. ", "Valeurs manuelles appliquees. Le jeu de donnees est maintenant complet pour la phase 1. ") + feh_note + " " + stellar_note, "ok")
 
 
   # ── Startup: pre-fetch the <20 pc HR background sample silently ──────────
@@ -2831,8 +3213,11 @@
     asyncio.ensure_future(run_lookup_from_url(force=True))
 
   hash_proxy = create_proxy(_on_hash_change)
+  rerender_proxy = create_proxy(rerender_current_view)
   window.addEventListener("hashchange", hash_proxy)
+  window.starometerRerender = rerender_proxy
   register_url_proxy(hash_proxy)
+  DYNAMIC_PROXIES.append(rerender_proxy)
 
   asyncio.ensure_future(_preload_hr())
   asyncio.ensure_future(run_lookup_from_url())
