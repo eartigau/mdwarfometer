@@ -721,16 +721,8 @@
       last_start, last_end = ranges[-1]
       ranges = [(last_start, first_end)] + ranges[1:-1]
 
-    min_abs_speed = min(abs(v_total) for v_total in daily_values)
-    min_days = [day_index for day_index, v_total in enumerate(daily_values) if abs(abs(v_total) - min_abs_speed) < 1e-9]
-    min_labels = ", ".join(day_of_year_to_label(day_index) for day_index in min_days[:3])
-
     if not ranges:
-      summary = (
-        f"No day reaches |v<sub>sys</sub> + v<sub>bary,orb</sub>| &lt; {PROBLEMATIC_RV_THRESHOLD_KMS:.0f} km/s; "
-        f"closest approach is {min_abs_speed:.2f} km/s on {min_labels}."
-      )
-      return ecl_lon_deg, ecl_lat_deg, summary
+      return ecl_lon_deg, ecl_lat_deg, "always &gt; 5 km/s"
 
     segments = []
     for start_day, end_day in ranges:
@@ -739,11 +731,7 @@
       else:
         segments.append(f"{day_of_year_to_label(start_day)} to {day_of_year_to_label(end_day)}")
 
-    summary = (
-      f"Days with |v<sub>sys</sub> + v<sub>bary,orb</sub>| &lt; {PROBLEMATIC_RV_THRESHOLD_KMS:.0f} km/s: "
-      f"{' ; '.join(segments)}. Closest approach: {min_abs_speed:.2f} km/s on {min_labels}."
-    )
-    return ecl_lon_deg, ecl_lat_deg, summary
+    return ecl_lon_deg, ecl_lat_deg, " ; ".join(segments)
 
 
   def recompute_kinematic_fields(data):
@@ -1507,7 +1495,7 @@
           )
         if telluric_summary is not None:
           extra_rows.append(
-            f'<tr class="grp-kin"><th>Telluric overlap risk<sup title="Orbital barycentric component only; daily sampling over a non-leap year.">j</sup></th><td>{telluric_summary}</td><td class="actions"></td></tr>'
+            f'<tr class="grp-kin"><th>|v<sub>sys</sub> + v<sub>bary,orb</sub>| &lt; 5 km/s<sup title="Orbital barycentric component only; daily sampling over a non-leap year.">j</sup></th><td>{telluric_summary}</td><td class="actions"></td></tr>'
           )
         row_html += "".join(extra_rows)
       return row_html
